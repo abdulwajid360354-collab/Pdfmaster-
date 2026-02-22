@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organize PDF | Professional Tool</title>
+    
+    <!-- UI Framework -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Drag and Drop Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    
+    <!-- PDF Processing -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- Icons/Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f1f5f9; }
+        
+        /* The Grid */
+        #pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 24px;
+            padding-bottom: 100px; /* Space for fixed footer */
+        }
+
+        /* Page Card */
+        .page-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: grab;
+            border: 2px solid transparent;
+            overflow: hidden;
+        }
+        
+        .page-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .page-card:active { cursor: grabbing; }
+
+        /* Sortable Ghost (The placeholder when dragging) */
+        .sortable-ghost {
+            background: #eff6ff;
+            border: 2px dashed #3b82f6;
+            opacity: 0.5;
+        }
+        .sortable-ghost img, .sortable-ghost .page-info { opacity: 0; }
+
+        /* Controls Overlay */
+        .card-controls {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4); /* Dark Overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(2px);
+        }
+        
+        .page-card:hover .card-controls { opacity: 1; }
+
+        /* Control Buttons */
+        .ctrl-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: white;
+            color: #334155;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            transition: transform 0.1s, background 0.2s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .ctrl-btn:hover { transform: scale(1.1); color: #2563eb; }
+        .ctrl-btn.delete:hover { background: #fee2e2; color: #ef4444; }
+
+        /* Page Number Badge */
+        .page-info {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* Image Styling */
+        .thumb-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease; /* Smooth rotation */
+        }
+
+        /* Loader */
+        .loader {
+            width: 20px; height: 20px; border: 3px solid #ffffff; 
+            border-bottom-color: transparent; border-radius: 50%; 
+            animation: rotation 1s linear infinite; display: inline-block;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <nav class="bg-white border-b border-slate-200 h-16 sticky top-0 z-40 px-6 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-2 text-slate-800 font-bold text-xl">
+            <div class="w-8 h-8 bg-brand-600 text-white rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <span>PDF<span class="text-brand-600">Organizer</span></span>
+        </div>
+        
+        <div class="text-xs font-medium text-slate-500 hidden sm:block">
+            <i class="fa-solid fa-lock mr-1"></i> Private Client-Side Processing
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6 w-full max-w-7xl mx-auto">
+        
+        <!-- Upload State -->
+        <div id="upload-state" class="flex flex-col items-center justify-center mt-12 bg-white rounded-2xl border-2 border-dashed border-slate-300 p-12 text-center transition hover:border-brand-500 hover:bg-blue-50/30 cursor-pointer" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" accept="application/pdf" class="hidden">
+            <div class="w-20 h-20 bg-blue-100 text-brand-600 rounded-full flex items-center justify-center text-3xl mb-4">
+                <i class="fa-solid fa-folder-tree"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800">Organize PDF Pages</h2>
+            <p class="text-slate-500 mt-2 mb-6">Drag & Drop file to Sort, Rotate, or Delete pages.</p>
+            <button class="bg-brand-600 text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-500/30">
+                Select PDF File
+            </button>
+        </div>
+
+        <!-- Editor State -->
+        <div id="editor-state" class="hidden">
+            
+            <!-- Toolbar -->
+            <div class="flex flex-wrap gap-4 items-center justify-between mb-6 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-red-100 text-red-500 rounded-lg flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div>
+                        <h3 id="filename" class="font-bold text-slate-800 text-sm truncate max-w-[200px]">Document.pdf</h3>
+                        <p id="page-count" class="text-xs text-slate-500">Loading...</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="resetAll()" class="px-4 py-2 text-slate-600 text-sm font-bold hover:bg-slate-100 rounded-lg transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+                    </button>
+                    <button onclick="document.getElementById('file-input').click()" class="px-4 py-2 text-brand-600 text-sm font-bold hover:bg-blue-50 rounded-lg transition">
+                        Open New
+                    </button>
+                </div>
+            </div>
+
+            <!-- The Grid -->
+            <div id="pages-grid">
+                <!-- Pages generated by JS -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Floating Footer (Actions) -->
+    <div id="action-footer" class="hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-sm text-slate-500 hidden sm:block">
+                Drag pages to reorder. Use hover buttons to rotate/delete.
+            </div>
+            <button id="save-btn" onclick="savePDF()" class="bg-brand-600 hover:bg-brand-700 text-white text-base font-bold py-3 px-8 rounded-full shadow-lg shadow-brand-500/30 flex items-center gap-2 transition-all active:scale-95 ml-auto">
+                <span id="btn-text">Save & Download</span>
+                <i class="fa-solid fa-download"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- VARIABLES ---
+        let originalPdfBytes = null;
+        let originalPdfDoc = null; // Used for copying pages
+        
+        // This array tracks the current state of every page in the grid
+        // Format: { originalIndex: 0, rotation: 0, element: DOMElement }
+        let pageState = [];
+
+        const fileInput = document.getElementById('file-input');
+        const grid = document.getElementById('pages-grid');
+        const saveBtn = document.getElementById('save-btn');
+        const btnText = document.getElementById('btn-text');
+
+        // --- 1. FILE LOADING ---
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // UI Switch
+            document.getElementById('upload-state').classList.add('hidden');
+            document.getElementById('editor-state').classList.remove('hidden');
+            document.getElementById('action-footer').classList.remove('hidden');
+            document.getElementById('action-footer').classList.add('block');
+            
+            document.getElementById('filename').textContent = file.name;
+            grid.innerHTML = '<div class="col-span-full text-center py-10 text-slate-400">Loading pages...</div>';
+
+            originalPdfBytes = await file.arrayBuffer();
+            
+            // Render Thumbnails
+            await renderPages(originalPdfBytes);
+        });
+
+        // --- 2. RENDER THUMBNAILS (PDF.js) ---
+        async function renderPages(pdfBytes) {
+            const pdf = await pdfjsLib.getDocument(pdfBytes.slice(0)).promise;
+            document.getElementById('page-count').textContent = `${pdf.numPages} Pages`;
+            
+            grid.innerHTML = ''; // Clear loader
+            pageState = []; // Reset state
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 0.4 }); // Thumbnail size
+
+                // Create Card DOM
+                const card = document.createElement('div');
+                card.className = 'page-card group';
+                card.dataset.id = i - 1; // 0-based original index
+                
+                // Canvas for image
+                const canvas = document.createElement('canvas');
+                canvas.className = 'thumb-img';
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Render Page
+                const context = canvas.getContext('2d');
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                // Controls HTML
+                const controls = document.createElement('div');
+                controls.className = 'card-controls';
+                controls.innerHTML = `
+                    <div class="ctrl-btn" onclick="rotatePage(this, -90)" title="Rotate Left"><i class="fa-solid fa-rotate-left"></i></div>
+                    <div class="ctrl-btn delete" onclick="deletePage(this)" title="Delete"><i class="fa-solid fa-trash"></i></div>
+                    <div class="ctrl-btn" onclick="rotatePage(this, 90)" title="Rotate Right"><i class="fa-solid fa-rotate-right"></i></div>
+                `;
+
+                // Page Info
+                const info = document.createElement('div');
+                info.className = 'page-info';
+                info.textContent = i; // Display Number (1-based)
+
+                // Assemble
+                card.appendChild(canvas);
+                card.appendChild(controls);
+                card.appendChild(info);
+                grid.appendChild(card);
+
+                // Add to State
+                // Default rotation is 0. Note: PDF files might have internal rotation, 
+                // but visually we start at 0 relative to how PDF.js renders it.
+                // We store the canvas element to easily update its CSS transform.
+                pageState.push({
+                    originalIndex: i - 1,
+                    rotation: 0,
+                    element: card
+                });
+            }
+
+            // Initialize SortableJS
+            initSortable();
+        }
+
+        // --- 3. SORTABLE JS (Drag & Drop) ---
+        function initSortable() {
+            new Sortable(grid, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function (evt) {
+                    // Reorder Logic handled visually by library
+                    // We will read the DOM order when saving
+                    renumberPages();
+                }
+            });
+        }
+
+        // --- 4. PAGE ACTIONS ---
+        
+        // Update the visible numbers at the bottom after dragging/deleting
+        function renumberPages() {
+            const cards = grid.querySelectorAll('.page-card');
+            cards.forEach((card, index) => {
+                card.querySelector('.page-info').textContent = index + 1;
+            });
+        }
+
+        window.rotatePage = function(btn, deg) {
+            const card = btn.closest('.page-card');
+            const img = card.querySelector('canvas');
+            const originalIndex = parseInt(card.dataset.id);
+            
+            // Find state object
+            // Note: We can't use index in array because array order changes or items deleted
+            // But we stored 'element' reference in pageState, or we can use DOM dataset
+            
+            // Let's store rotation in dataset for simplicity during Save loop
+            let currentRot = parseInt(card.dataset.rotation || 0);
+            let newRot = currentRot + deg;
+            
+            // CSS Transform for visual feedback
+            img.style.transform = `rotate(${newRot}deg)`;
+            
+            // Update Dataset
+            card.dataset.rotation = newRot;
+        };
+
+        window.deletePage = function(btn) {
+            const card = btn.closest('.page-card');
+            
+            // Animate removal
+            card.style.transform = "scale(0.5)";
+            card.style.opacity = "0";
+            
+            setTimeout(() => {
+                card.remove();
+                renumberPages();
+                
+                // Check if empty
+                if(grid.children.length === 0) {
+                    alert("You deleted all pages! Reloading...");
+                    location.reload();
+                }
+            }, 200);
+        };
+
+        // --- 5. SAVE PDF (The Engine) ---
+        async function savePDF() {
+            if (!originalPdfBytes) return;
+
+            // UI Loading
+            saveBtn.disabled = true;
+            btnText.textContent = "Processing...";
+            const loader = document.createElement('span'); loader.className = 'loader';
+            saveBtn.insertBefore(loader, btnText);
+
+            try {
+                const { PDFDocument, degrees } = PDFLib;
+                
+                // Load original
+                const sourcePdf = await PDFDocument.load(originalPdfBytes);
+                
+                // Create new PDF
+                const newPdf = await PDFDocument.create();
+
+                // Get current DOM order (Visual Order)
+                const cards = Array.from(grid.querySelectorAll('.page-card'));
+                
+                // Logic:
+                // 1. Map visual cards to original page indices
+                // 2. Copy those pages
+                // 3. Apply rotation
+                
+                const indicesToCopy = cards.map(c => parseInt(c.dataset.id));
+                
+                // Copy pages in one batch (Optimization)
+                const copiedPages = await newPdf.copyPages(sourcePdf, indicesToCopy);
+
+                // Add them to new PDF and apply rotation
+                for (let i = 0; i < copiedPages.length; i++) {
+                    const page = copiedPages[i];
+                    const card = cards[i];
+                    
+                    // Add Page
+                    newPdf.addPage(page);
+                    
+                    // Apply Rotation
+                    // Current PDF-Lib rotation is absolute. 
+                    // Visual rotation is relative to 0.
+                    // We take the existing rotation of the page + added visual rotation.
+                    const addedRotation = parseInt(card.dataset.rotation || 0);
+                    const currentRotation = page.getRotation().angle;
+                    
+                    page.setRotation(degrees(currentRotation + addedRotation));
+                }
+
+                // Save
+                const pdfBytes = await newPdf.save();
+                downloadFile(pdfBytes, "organized_document.pdf");
+
+                // Reset Button
+                btnText.textContent = "Saved!";
+                loader.remove();
+                saveBtn.classList.replace('bg-brand-600', 'bg-green-600');
+                
+                setTimeout(() => {
+                    saveBtn.disabled = false;
+                    btnText.textContent = "Save & Download";
+                    saveBtn.classList.replace('bg-green-600', 'bg-brand-600');
+                }, 2000);
+
+            } catch (error) {
+                console.error(error);
+                alert("Error saving PDF.");
+                saveBtn.disabled = false;
+                btnText.textContent = "Save & Download";
+                loader.remove();
+            }
+        }
+
+        function downloadFile(data, filename) {
+            const blob = new Blob([data], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function resetAll() {
+            if(confirm("Reset all changes?")) {
+                renderPages(originalPdfBytes);
+            }
+        }
+    </script>
+</body>
+  </html>
