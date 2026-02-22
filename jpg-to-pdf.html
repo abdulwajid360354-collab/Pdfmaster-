@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Image to PDF Converter</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- jsPDF Library for Image to PDF Conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .drag-over { border-color: #9333ea !important; background-color: #faf5ff !important; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-purple-100 p-2 rounded-lg text-purple-600">
+                        <i class="fa-solid fa-images text-xl"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">IMG<span class="text-purple-600">toPDF</span></span>
+                </div>
+                <div class="hidden md:flex items-center gap-4 text-sm font-medium text-slate-500">
+                    <span><i class="fa-solid fa-shield-halved mr-1"></i> Private & Secure</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-5xl mx-auto w-full p-6">
+
+        <div class="text-center mb-8 mt-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">Convert Images to PDF</h1>
+            <p class="text-slate-500">Turn your JPG, PNG, or BMP images into a professional PDF document.</p>
+        </div>
+
+        <!-- 1. Upload Area -->
+        <div id="upload-section">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-2xl bg-white p-10 text-center cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-all duration-300 group relative">
+                <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/png, image/jpeg, image/jpg" multiple>
+                <div class="pointer-events-none">
+                    <div class="w-16 h-16 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-sm">
+                        <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-700">Drop images here</h3>
+                    <p class="text-sm text-slate-400 mt-1">Supports JPG, PNG (Max 10MB each)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Workspace (Hidden initially) -->
+        <div id="workspace-section" class="hidden mt-8 flex flex-col lg:flex-row gap-8">
+            
+            <!-- Left: Image Grid -->
+            <div class="flex-grow">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-700">Selected Images <span id="count-badge" class="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full ml-1">0</span></h2>
+                    <button onclick="addMoreFiles()" class="text-sm font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Add More
+                    </button>
+                </div>
+
+                <div id="image-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <!-- Image Cards Injected Here -->
+                </div>
+            </div>
+
+            <!-- Right: Settings Panel -->
+            <div class="w-full lg:w-80 flex-shrink-0">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 sticky top-24">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-purple-500"></i> PDF Settings
+                    </h3>
+
+                    <!-- Orientation -->
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Orientation</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="orientation" value="p" checked class="peer sr-only">
+                                <div class="text-center p-2 border rounded hover:bg-slate-50 peer-checked:border-purple-500 peer-checked:text-purple-600 peer-checked:bg-purple-50 transition">
+                                    <i class="fa-regular fa-file mb-1 block"></i> Portrait
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="orientation" value="l" class="peer sr-only">
+                                <div class="text-center p-2 border rounded hover:bg-slate-50 peer-checked:border-purple-500 peer-checked:text-purple-600 peer-checked:bg-purple-50 transition">
+                                    <i class="fa-regular fa-file image-rotate-90 mb-1 block" style="transform: rotate(90deg);"></i> Landscape
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Page Size -->
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Page Size</label>
+                        <select id="page-size" class="w-full p-2 border border-slate-300 rounded text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none">
+                            <option value="a4">A4 (Standard)</option>
+                            <option value="letter">Letter (US)</option>
+                            <option value="fit">Fit to Image (Original)</option>
+                        </select>
+                    </div>
+
+                    <!-- Margin -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Margin</label>
+                        <select id="margin-size" class="w-full p-2 border border-slate-300 rounded text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none">
+                            <option value="small">Small Border</option>
+                            <option value="none">No Margin (Full)</option>
+                            <option value="large">Big Border</option>
+                        </select>
+                    </div>
+
+                    <button onclick="convertImages()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                        <span>Convert to PDF</span>
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                    
+                    <button onclick="resetApp()" class="w-full mt-3 text-slate-400 hover:text-red-500 text-sm font-medium">Clear All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Success Area -->
+        <div id="success-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl transform scale-100 transition-transform">
+                <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-5 animate-pulse">
+                    <i class="fa-solid fa-check text-4xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">PDF Created!</h2>
+                <p class="text-slate-500 mb-6">Your images have been successfully compiled.</p>
+                
+                <button onclick="downloadPDF()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg shadow-md mb-3 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i> Download PDF
+                </button>
+                <button onclick="closeSuccess()" class="text-slate-400 hover:text-slate-600 text-sm font-medium">Close</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 text-center text-slate-400 text-sm bg-white border-t border-slate-200">
+        <p>&copy; 2024 IMGtoPDF Tool. Fast processing in browser.</p>
+    </footer>
+
+    <!-- Loader -->
+    <div id="loader" class="fixed inset-0 bg-white/80 z-50 flex flex-col items-center justify-center hidden">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-purple-600 mb-4"></div>
+        <p class="font-semibold text-slate-700">Generating PDF...</p>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+        let images = []; // Stores { id, file, src (base64) }
+        let generatedPdfBlob = null;
+
+        // Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const workspace = document.getElementById('workspace-section');
+        const uploadSection = document.getElementById('upload-section'); // Keep visible for "Add More" logic if needed, but here we toggle
+        const imageGrid = document.getElementById('image-grid');
+        const loader = document.getElementById('loader');
+        const successOverlay = document.getElementById('success-overlay');
+
+        // Drag & Drop
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('drag-over'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
+
+        function addMoreFiles() {
+            fileInput.click();
+        }
+
+        async function handleFiles(files) {
+            const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            
+            if (newFiles.length === 0) return;
+
+            loader.classList.remove('hidden');
+
+            // Process files to Base64
+            for (const file of newFiles) {
+                const src = await readFileAsDataURL(file);
+                images.push({
+                    id: Date.now() + Math.random(), // unique ID
+                    file: file,
+                    src: src
+                });
+            }
+
+            loader.classList.add('hidden');
+            updateUI();
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('count-badge').textContent = images.length;
+
+            if (images.length > 0) {
+                workspace.classList.remove('hidden');
+                uploadSection.classList.add('hidden'); // Hide big drop zone
+            } else {
+                workspace.classList.add('hidden');
+                uploadSection.classList.remove('hidden');
+            }
+
+            imageGrid.innerHTML = '';
+            images.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = "relative group bg-white p-2 rounded-lg shadow border border-slate-200 aspect-[3/4] flex flex-col items-center justify-center overflow-hidden hover:border-purple-300 transition";
+                
+                div.innerHTML = `
+                    <img src="${img.src}" class="max-w-full max-h-[80%] object-contain rounded shadow-sm">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                        <div class="flex gap-2">
+                            ${index > 0 ? `<button onclick="moveImage(${index}, -1)" class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-purple-100 text-purple-600"><i class="fa-solid fa-arrow-left"></i></button>` : ''}
+                            ${index < images.length - 1 ? `<button onclick="moveImage(${index}, 1)" class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-purple-100 text-purple-600"><i class="fa-solid fa-arrow-right"></i></button>` : ''}
+                        </div>
+                        <button onclick="removeImage(${index})" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow"><i class="fa-solid fa-trash mr-1"></i> Remove</button>
+                    </div>
+                    <div class="absolute bottom-2 right-2 bg-slate-800 text-white text-xs px-2 py-0.5 rounded opacity-70">${index + 1}</div>
+                `;
+                imageGrid.appendChild(div);
+            });
+        }
+
+        function removeImage(index) {
+            images.splice(index, 1);
+            updateUI();
+        }
+
+        function moveImage(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < images.length) {
+                [images[index], images[newIndex]] = [images[newIndex], images[index]];
+                updateUI();
+            }
+        }
+
+        function resetApp() {
+            images = [];
+            fileInput.value = "";
+            generatedPdfBlob = null;
+            updateUI();
+        }
+
+        // --- CONVERSION LOGIC ---
+        async function convertImages() {
+            if (images.length === 0) return;
+            
+            loader.classList.remove('hidden');
+
+            // Get Settings
+            const orientation = document.querySelector('input[name="orientation"]:checked').value;
+            const pageSize = document.getElementById('page-size').value;
+            const marginSetting = document.getElementById('margin-size').value;
+
+            // Wait a bit for UI to show loader
+            setTimeout(async () => {
+                try {
+                    const doc = new jsPDF({
+                        orientation: orientation,
+                        unit: 'mm',
+                        format: pageSize === 'fit' ? 'a4' : pageSize // If fit, we initialize A4 but change page size later
+                    });
+
+                    // Define Margins (mm)
+                    let margin = 10;
+                    if (marginSetting === 'none') margin = 0;
+                    if (marginSetting === 'large') margin = 20;
+
+                    for (let i = 0; i < images.length; i++) {
+                        if (i > 0) doc.addPage();
+
+                        const imgData = images[i].src;
+                        
+                        // Load image to get dimensions
+                        const imgProps = await getImageProperties(imgData);
+                        
+                        let pdfWidth = doc.internal.pageSize.getWidth();
+                        let pdfHeight = doc.internal.pageSize.getHeight();
+
+                        // Logic for "Fit to Image"
+                        if (pageSize === 'fit') {
+                            // Convert px to mm (approx 1px = 0.264mm)
+                            const pxToMm = 0.264583;
+                            let imgW = imgProps.width * pxToMm;
+                            let imgH = imgProps.height * pxToMm;
+                            
+                            // Set PDF page size to match image size exactly
+                            doc.deletePage(i + 1); // remove standard page
+                            doc.addPage([imgW, imgH], imgW > imgH ? 'l' : 'p'); // add custom page
+                            pdfWidth = imgW;
+                            pdfHeight = imgH;
+                            margin = 0; // Force no margin for fit mode
+                        }
+
+                        // Calculate dimensions to fit in page
+                        const availWidth = pdfWidth - (margin * 2);
+                        const availHeight = pdfHeight - (margin * 2);
+
+                        const ratio = Math.min(availWidth / imgProps.width, availHeight / imgProps.height);
+                        
+                        let finalW, finalH;
+
+                        if (pageSize === 'fit') {
+                            finalW = pdfWidth;
+                            finalH = pdfHeight;
+                        } else {
+                            // Standard scaling for A4/Letter
+                            // We need to use image aspect ratio
+                            // imgProps.width is simply the pixel width, we need to map it to mm space
+                            const imgAspect = imgProps.width / imgProps.height;
+                            const pageAspect = availWidth / availHeight;
+
+                            if (imgAspect > pageAspect) {
+                                finalW = availWidth;
+                                finalH = availWidth / imgAspect;
+                            } else {
+                                finalH = availHeight;
+                                finalW = availHeight * imgAspect;
+                            }
+                        }
+
+                        const x = (pdfWidth - finalW) / 2;
+                        const y = (pdfHeight - finalH) / 2;
+
+                        doc.addImage(imgData, 'JPEG', x, y, finalW, finalH);
+                    }
+
+                    generatedPdfBlob = doc.output('blob');
+                    successOverlay.classList.remove('hidden');
+                    
+                } catch (e) {
+                    console.error(e);
+                    alert("An error occurred during conversion.");
+                } finally {
+                    loader.classList.add('hidden');
+                }
+            }, 100);
+        }
+
+        function getImageProperties(src) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.width, height: img.height });
+                img.src = src;
+            });
+        }
+
+        function downloadPDF() {
+            if (generatedPdfBlob) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(generatedPdfBlob);
+                link.download = "images_converted.pdf";
+                link.click();
+            }
+        }
+
+        function closeSuccess() {
+            successOverlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
