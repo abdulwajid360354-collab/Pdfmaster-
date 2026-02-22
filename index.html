@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Master - All 20+ Tools</title>
+    <title>PDF Master - All 20+ Free Tools</title>
     
     <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* --- CORE STYLES --- */
         :root {
             --primary: #4f46e5;       
             --secondary: #ec4899;     
@@ -28,130 +29,45 @@
             min-height: 100vh;
         }
 
-        /* --- HEADER --- */
+        /* HEADER */
         header {
-            background: white;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .nav-links { display: flex; gap: 20px; }
-        .nav-links button {
-            background: none;
-            border: none;
-            color: #64748b;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 5px 10px;
-        }
-        .nav-links button:hover, .nav-links button.active { 
-            color: var(--primary); 
-            font-weight: 700; 
-        }
+        .nav-links button { background: none; border: none; color: #64748b; font-size: 1rem; font-weight: 500; cursor: pointer; transition: 0.3s; padding: 5px 10px; }
+        .nav-links button:hover, .nav-links button.active { color: var(--primary); font-weight: 700; }
 
-        /* --- PAGE SECTIONS --- */
-        .page-section { 
-            display: none; 
-            padding: 40px 20px; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            animation: fadeIn 0.4s ease-in-out;
-            width: 100%;
-        }
+        /* SECTIONS */
+        .page-section { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease-in-out; width: 100%; }
         .page-section.active { display: block; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- HERO --- */
-        .hero {
-            text-align: center;
-            padding: 3rem 1rem;
-            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 30px;
-        }
+        /* HERO */
+        .hero { text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%); border-radius: 0 0 30px 30px; margin-bottom: 30px; }
         .hero h1 { font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
-        .hero p { color: #475569; }
-
-        /* --- ADVERTISEMENT STYLES --- */
-        .ad-container {
-            width: 100%;
-            background-color: #e2e8f0;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #64748b;
-            font-weight: bold;
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            overflow: hidden;
-            position: relative;
-        }
         
-        .ad-banner {
-            max-width: 728px;
-            height: 90px;
-        }
+        /* ADS */
+        .ad-container { width: 100%; background-color: #e2e8f0; margin: 20px auto; display: flex; justify-content: center; align-items: center; color: #64748b; font-weight: bold; border: 2px dashed #cbd5e1; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; overflow: hidden; position: relative; }
+        .ad-banner { max-width: 728px; height: 90px; }
+        .ad-grid-wrapper { grid-column: 1 / -1; width: 100%; margin: 20px 0; }
 
-        .ad-grid-wrapper {
-            grid-column: 1 / -1; 
-            width: 100%;
-        }
-
-        /* --- TOOLS GRID --- */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 30px;
-            padding: 20px;
-        }
-
+        /* GRID */
+        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 20px; }
+        
         .tool-card {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            text-align: center;
-            border: 1px solid #f1f5f9;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white; padding: 30px 20px; border-radius: 20px; text-align: center;
+            border: 1px solid #f1f5f9; cursor: pointer; box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; display: block;
         }
+        .tool-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15); }
+        .tool-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; padding: 15px; border-radius: 15px; }
+        .tool-card h3 { font-size: 1.2rem; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        .tool-card p { font-size: 0.9rem; color: #94a3b8; }
 
-        .tool-card:hover { 
-            transform: translateY(-5px); 
-            border-color: var(--primary); 
-            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
-        }
-
-        .tool-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            display: inline-block;
-            padding: 15px;
-            border-radius: 15px;
-        }
-
+        /* Tool Colors */
         .tc-red .tool-icon { color: #ef4444; background: #fee2e2; }
         .tc-yellow .tool-icon { color: #f59e0b; background: #fef3c7; }
         .tc-green .tool-icon { color: #10b981; background: #d1fae5; }
@@ -159,60 +75,27 @@
         .tc-purple .tool-icon { color: #8b5cf6; background: #ede9fe; }
         .tc-orange .tool-icon { color: #f97316; background: #ffedd5; }
 
-        .tool-card h3 { font-size: 1.2rem; margin-bottom: 8px; font-weight: 600; }
-        .tool-card p { font-size: 0.9rem; color: #94a3b8; }
-
-        /* --- CONTENT PAGES --- */
-        .content-box {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            line-height: 1.8;
-            color: #475569;
-        }
+        /* CONTENT PAGES */
+        .content-box { background: white; padding: 40px; border-radius: 20px; box-shadow: var(--shadow); line-height: 1.8; color: #475569; }
         .content-box h2 { color: var(--dark); margin-bottom: 20px; font-size: 2rem; }
         .content-box h3 { color: var(--primary); margin-top: 20px; margin-bottom: 10px; }
-
-        /* Form */
+        
+        /* FORM */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;
-        }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
         .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
-        .submit-btn {
-            background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%;
-        }
+        .submit-btn { background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; }
 
-        /* --- FOOTER --- */
-        footer {
-            background: white;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-            margin-top: auto;
-        }
-        .counter-badge {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: #0f172a; color: #fff; padding: 8px 20px;
-            border-radius: 50px; font-size: 0.9rem; margin-top: 10px;
-        }
-        .live-dot {
-            height: 10px; width: 10px; background-color: #22c55e;
-            border-radius: 50%; animation: pulse 2s infinite;
-        }
+        /* FOOTER */
+        footer { background: white; padding: 30px 20px; text-align: center; border-top: 1px solid #e2e8f0; margin-top: auto; }
+        .footer-links button { background: none; border: none; color: #64748b; cursor: pointer; margin: 0 10px; }
+        .counter-badge { display: inline-flex; align-items: center; gap: 10px; background: #0f172a; color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 0.9rem; margin-top: 20px; }
+        .live-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* RESPONSIVE */
-        @media(max-width: 900px) {
-            .tools-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media(max-width: 600px) {
-            .tools-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-            .ad-banner { height: 250px; max-width: 300px; }
-        }
+        @media(max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media(max-width: 600px) { .tools-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .ad-banner { height: 250px; max-width: 300px; } }
     </style>
 </head>
 <body>
@@ -228,247 +111,217 @@
         </nav>
     </header>
 
-    <!-- 1. HOME PAGE -->
+    <!-- 1. HOME PAGE (Dynamic Tools) -->
     <div id="home-page" class="page-section active">
         <div class="hero">
             <h1>We Make PDF Easy.</h1>
             <p>All the tools you'll ever need to work with PDFs in one place.</p>
         </div>
 
-        <!-- AD SPACE 1 -->
+        <!-- AD SPACE 1: TOP -->
         <div class="ad-container ad-banner">
-            <p>Ad Space (Top)</p>
+            <p>Ad Space (Top Banner)</p>
         </div>
 
-        <!-- Grid Layout -->
-        <div class="tools-grid">
-            
-            <!-- ROW 1 -->
-            <div class="tool-card tc-red" onclick="useTool('Merge PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-layer-group"></i></div>
-                <h3>Merge PDF</h3>
-                <p>Combine multiple files.</p>
-            </div>
-            <div class="tool-card tc-yellow" onclick="useTool('Split PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-scissors"></i></div>
-                <h3>Split PDF</h3>
-                <p>Extract pages from PDF.</p>
-            </div>
-            <div class="tool-card tc-green" onclick="useTool('Compress PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-compress"></i></div>
-                <h3>Compress PDF</h3>
-                <p>Reduce file size instantly.</p>
-            </div>
-
-            <!-- ROW 2 -->
-            <div class="tool-card tc-blue" onclick="useTool('PDF to Word')">
-                <div class="tool-icon"><i class="fa-solid fa-file-word"></i></div>
-                <h3>PDF to Word</h3>
-                <p>Convert PDF to DOCX.</p>
-            </div>
-            <div class="tool-card tc-blue" onclick="useTool('Word to PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-file-pdf"></i></div>
-                <h3>Word to PDF</h3>
-                <p>Convert DOCX to PDF.</p>
-            </div>
-            <div class="tool-card tc-purple" onclick="useTool('PDF to JPG')">
-                <div class="tool-icon"><i class="fa-regular fa-image"></i></div>
-                <h3>PDF to JPG</h3>
-                <p>Convert pages to images.</p>
-            </div>
-
-            <!-- AD SPACE 2 (In-Feed) -->
-            <div class="ad-grid-wrapper">
-                <div class="ad-container ad-banner">
-                    <p>Ad Space (Middle)</p>
-                </div>
-            </div>
-
-            <!-- ROW 3 -->
-            <div class="tool-card tc-purple" onclick="useTool('JPG to PDF')">
-                <div class="tool-icon"><i class="fa-regular fa-images"></i></div>
-                <h3>JPG to PDF</h3>
-                <p>Images to PDF file.</p>
-            </div>
-             <div class="tool-card tc-green" onclick="useTool('Excel to PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-file-excel"></i></div>
-                <h3>Excel to PDF</h3>
-                <p>XLSX to PDF document.</p>
-            </div>
-            <div class="tool-card tc-green" onclick="useTool('PDF to Excel')">
-                <div class="tool-icon"><i class="fa-solid fa-table"></i></div>
-                <h3>PDF to Excel</h3>
-                <p>PDF tables to XLSX.</p>
-            </div>
-
-            <!-- ROW 4 -->
-            <div class="tool-card tc-orange" onclick="useTool('PPT to PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-file-powerpoint"></i></div>
-                <h3>PPT to PDF</h3>
-                <p>PowerPoint to PDF.</p>
-            </div>
-            <div class="tool-card tc-orange" onclick="useTool('PDF to PPT')">
-                <div class="tool-icon"><i class="fa-solid fa-file-powerpoint"></i></div>
-                <h3>PDF to PPT</h3>
-                <p>Convert PDF to Slides.</p>
-            </div>
-            <div class="tool-card tc-red" onclick="useTool('Delete Pages')">
-                <div class="tool-icon"><i class="fa-solid fa-trash-can"></i></div>
-                <h3>Delete Pages</h3>
-                <p>Remove pages from PDF.</p>
-            </div>
-
-            <!-- ROW 5 -->
-            <div class="tool-card tc-blue" onclick="useTool('Unlock PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-unlock"></i></div>
-                <h3>Unlock PDF</h3>
-                <p>Remove password.</p>
-            </div>
-             <div class="tool-card tc-blue" onclick="useTool('Protect PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>Protect PDF</h3>
-                <p>Encrypt with Password.</p>
-            </div>
-            <div class="tool-card tc-yellow" onclick="useTool('Rotate PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-rotate-right"></i></div>
-                <h3>Rotate PDF</h3>
-                <p>Rotate pages 90°.</p>
-            </div>
-
-            <!-- ROW 6 -->
-            <div class="tool-card tc-purple" onclick="useTool('Add Watermark')">
-                <div class="tool-icon"><i class="fa-solid fa-stamp"></i></div>
-                <h3>Add Watermark</h3>
-                <p>Stamp text or image.</p>
-            </div>
-            <div class="tool-card tc-red" onclick="useTool('Page Numbers')">
-                <div class="tool-icon"><i class="fa-solid fa-list-ol"></i></div>
-                <h3>Page Numbers</h3>
-                <p>Add numbers to pages.</p>
-            </div>
-            <div class="tool-card tc-blue" onclick="useTool('Sign PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-file-signature"></i></div>
-                <h3>Sign PDF</h3>
-                <p>Add electronic signature.</p>
-            </div>
-             <!-- ROW 7 -->
-             <div class="tool-card tc-green" onclick="useTool('Repair PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                <h3>Repair PDF</h3>
-                <p>Fix damaged files.</p>
-            </div>
-             <div class="tool-card tc-orange" onclick="useTool('Organize PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-sort"></i></div>
-                <h3>Organize PDF</h3>
-                <p>Rearrange page order.</p>
-            </div>
-             <div class="tool-card tc-purple" onclick="useTool('Grayscale PDF')">
-                <div class="tool-icon"><i class="fa-solid fa-filter"></i></div>
-                <h3>Grayscale PDF</h3>
-                <p>Convert to Black & White.</p>
-            </div>
-
+        <!-- TOOLS GRID (Generated by JS) -->
+        <div class="tools-grid" id="dynamic-tools-container">
+            <!-- Tools yahan load honge -->
         </div>
 
-        <!-- AD SPACE 3 -->
+        <!-- AD SPACE 3: BOTTOM -->
         <div class="ad-container ad-banner">
             <p>Ad Space (Bottom)</p>
         </div>
     </div>
 
-    <!-- 2. ABOUT US -->
+    <!-- 2. ABOUT US PAGE -->
     <div id="about-page" class="page-section">
         <div class="content-box">
-            <h2>About Us</h2>
-            <p>Welcome to PDF Master.</p>
-            <div class="ad-container ad-banner">
-                <p>Ad Space</p>
-            </div>
+            <h2>About PDF Master</h2>
+            <p>Welcome to <strong>PDF Master</strong>. We provide free, secure, and fast PDF solutions directly in your browser. Unlike other sites, we do not upload your files to our servers.</p>
             <h3>Our Mission</h3>
-            <p>To provide high-quality PDF tools for free.</p>
+            <p>To provide high-quality PDF tools for free to students, professionals, and businesses.</p>
         </div>
     </div>
 
-    <!-- 3. PRIVACY -->
+    <!-- 3. PRIVACY POLICY PAGE -->
     <div id="privacy-page" class="page-section">
         <div class="content-box">
             <h2>Privacy Policy</h2>
-            <p>We do not store your files.</p>
+            <p>Your privacy is important to us.</p>
+            <h3>No Server Uploads</h3>
+            <p>We perform all operations in your browser. No file is ever uploaded to our server.</p>
+            <h3>Cookies</h3>
+            <p>We use cookies to improve user experience and display ads.</p>
         </div>
     </div>
 
-    <!-- 4. CONTACT -->
+    <!-- 4. TERMS PAGE -->
+    <div id="terms-page" class="page-section">
+        <div class="content-box">
+            <h2>Terms and Conditions</h2>
+            <p>By using our tools, you agree that you are responsible for the files you process. We are not liable for any data loss.</p>
+        </div>
+    </div>
+
+    <!-- 5. DISCLAIMER PAGE -->
+    <div id="disclaimer-page" class="page-section">
+        <div class="content-box">
+            <h2>Disclaimer</h2>
+            <p>The tools are provided "as is". We make no warranties regarding the accuracy or reliability of the results.</p>
+        </div>
+    </div>
+
+    <!-- 6. CONTACT US PAGE -->
     <div id="contact-page" class="page-section">
         <div class="content-box">
             <h2>Contact Us</h2>
-            <form onsubmit="event.preventDefault(); alert('Message sent!');">
-                <div class="form-group"><label>Email</label><input type="email" required></div>
-                <div class="form-group"><label>Message</label><textarea rows="5" required></textarea></div>
-                <button type="submit" class="submit-btn">Send</button>
+            <p>Have suggestions? Let us know.</p>
+            
+            <div style="margin-bottom: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px;">
+                <strong>Email:</strong> contact@yoursite.com
+            </div>
+
+            <form onsubmit="event.preventDefault(); alert('Message Sent!');">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea rows="5" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
             </form>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
+        <div class="footer-links" style="margin-bottom: 15px;">
+            <button onclick="showPage('privacy')">Privacy Policy</button> |
+            <button onclick="showPage('terms')">Terms & Conditions</button> |
+            <button onclick="showPage('disclaimer')">Disclaimer</button>
+        </div>
         <p>&copy; 2023 PDF Master. All rights reserved.</p>
         <div class="counter-badge">
             <div class="live-dot"></div>
-            <!-- Changed label to reflect tool usage -->
             <span>Total Tools Used: <strong id="usageCount">Loading...</strong></span>
         </div>
     </footer>
 
+<!-- JAVASCRIPT -->
 <script>
-    // --- NAVIGATION ---
+    // ==========================================
+    // 🛠️ TOOLS LIST (Yahan sare tools hain)
+    // ==========================================
+    const toolsData = [
+        // ROW 1
+        { name: "Merge PDF",     icon: "fa-layer-group", desc: "Combine multiple files.",   link: "merge.html",      color: "red" },
+        { name: "Split PDF",     icon: "fa-scissors",    desc: "Extract pages from PDF.",   link: "split.html",      color: "yellow" },
+        { name: "Compress PDF",  icon: "fa-compress",    desc: "Reduce file size.",         link: "compress.html",   color: "green" },
+
+        // ROW 2
+        { name: "PDF to Word",   icon: "fa-file-word",   desc: "Convert PDF to DOCX.",      link: "pdf-to-word.html", color: "blue" },
+        { name: "Word to PDF",   icon: "fa-file-pdf",    desc: "Convert DOCX to PDF.",      link: "word-to-pdf.html", color: "blue" },
+        { name: "PDF to JPG",    icon: "fa-image",       desc: "Convert pages to images.",  link: "pdf-to-jpg.html",  color: "purple" },
+
+        // ADVERTISEMENT (In-Feed)
+        { type: "ad" },
+
+        // ROW 3
+        { name: "JPG to PDF",    icon: "fa-images",      desc: "Images to PDF file.",       link: "jpg-to-pdf.html",  color: "purple" },
+        { name: "Excel to PDF",  icon: "fa-file-excel",  desc: "XLSX to PDF document.",     link: "excel-to-pdf.html", color: "green" },
+        { name: "PDF to Excel",  icon: "fa-table",       desc: "PDF tables to XLSX.",       link: "pdf-to-excel.html", color: "green" },
+
+        // ROW 4
+        { name: "PPT to PDF",    icon: "fa-file-powerpoint", desc: "PowerPoint to PDF.",    link: "ppt-to-pdf.html",  color: "orange" },
+        { name: "PDF to PPT",    icon: "fa-file-powerpoint", desc: "Convert PDF to Slides.",link: "pdf-to-ppt.html",  color: "orange" },
+        { name: "Delete Pages",  icon: "fa-trash-can",   desc: "Remove pages from PDF.",    link: "delete-pages.html", color: "red" },
+
+        // ROW 5
+        { name: "Unlock PDF",    icon: "fa-unlock",      desc: "Remove password.",          link: "unlock-pdf.html",  color: "blue" },
+        { name: "Protect PDF",   icon: "fa-shield-halved", desc: "Encrypt with Password.",  link: "protect-pdf.html", color: "blue" },
+        { name: "Rotate PDF",    icon: "fa-rotate-right",desc: "Rotate pages 90°.",         link: "rotate-pdf.html",  color: "yellow" },
+
+        // ROW 6
+        { name: "Add Watermark", icon: "fa-stamp",       desc: "Stamp text or image.",      link: "watermark.html",   color: "purple" },
+        { name: "Page Numbers",  icon: "fa-list-ol",     desc: "Add numbers to pages.",     link: "page-numbers.html", color: "red" },
+        { name: "Sign PDF",      icon: "fa-file-signature", desc: "Add electronic signature.", link: "sign-pdf.html", color: "blue" },
+        
+        // ROW 7
+        { name: "Repair PDF",    icon: "fa-screwdriver-wrench", desc: "Fix damaged files.", link: "repair-pdf.html",  color: "green" },
+        { name: "Organize PDF",  icon: "fa-sort",        desc: "Rearrange page order.",     link: "organize-pdf.html", color: "orange" },
+        { name: "Grayscale PDF", icon: "fa-filter",      desc: "Convert to Black & White.", link: "grayscale.html",   color: "purple" },
+    ];
+
+    // ==========================================
+    // ⚙️ LOGIC
+    // ==========================================
+
+    function loadTools() {
+        const container = document.getElementById('dynamic-tools-container');
+        container.innerHTML = '';
+
+        toolsData.forEach(tool => {
+            if (tool.type === 'ad') {
+                const adDiv = document.createElement('div');
+                adDiv.className = 'ad-grid-wrapper';
+                adDiv.innerHTML = `<div class="ad-container ad-banner"><p>Ad Space (In-Feed)</p></div>`;
+                container.appendChild(adDiv);
+            } else {
+                const card = document.createElement('div');
+                let colorClass = `tc-${tool.color}`;
+                card.className = `tool-card ${colorClass}`;
+                card.innerHTML = `
+                    <div class="tool-icon"><i class="fa-solid ${tool.icon}"></i></div>
+                    <h3>${tool.name}</h3>
+                    <p>${tool.desc}</p>
+                `;
+                card.onclick = () => openTool(tool.name, tool.link);
+                container.appendChild(card);
+            }
+        });
+    }
+
+    function openTool(name, link) {
+        // Count badhao
+        incrementCounter();
+        // Redirect logic
+        // alert('Going to: ' + link); // Testing k liye
+        window.location.href = link; 
+    }
+
+    // Navigation
     function showPage(pageId) {
         document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
         document.getElementById(pageId + '-page').classList.add('active');
         const btn = document.getElementById('btn-' + pageId);
         if(btn) btn.classList.add('active');
+        window.scrollTo(0, 0);
     }
 
-    // --- COUNTER LOGIC (REAL TOOL USAGE) ---
-    // Namespace generate karte hain taake aapka counter unique ho
-    const namespace = 'pdf-tools-tracker-' + (window.location.hostname || 'local');
-    const key = 'total_actions';
+    // Counter
+    const namespace = 'pdf-tools-master-' + (window.location.hostname || 'local');
+    const key = 'usage_stats';
 
-    // 1. Page Load par sirf current number dikhao (Increment mat karo)
     function loadCounter() {
         fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
             .then(res => res.json())
-            .then(res => {
-                // Agar value null hai (first time) to 0 dikhao, warna value
-                document.getElementById('usageCount').innerText = (res.value || 0).toLocaleString();
-            })
-            .catch(err => {
-                document.getElementById('usageCount').innerText = "10,500+"; // Fallback text
-            });
+            .then(res => { document.getElementById('usageCount').innerText = (res.value || 0).toLocaleString(); })
+            .catch(() => { document.getElementById('usageCount').innerText = "15,200+"; });
     }
 
-    // 2. Jab koi Tool Click karega, tab server par counter +1 hoga
     function incrementCounter() {
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-            .then(res => res.json())
-            .then(res => {
-                document.getElementById('usageCount').innerText = res.value.toLocaleString();
-            });
+        fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
     }
 
-    // --- TOOL FUNCTION ---
-    function useTool(toolName) {
-        // Pehle counter badhao (Real counting)
-        incrementCounter();
-        
-        // Phir alert dikhao
-        setTimeout(() => {
-            alert(toolName + " tool is starting...\n(Counter updated!)");
-        }, 100);
-    }
-
-    // Initialize only View on load
-    document.addEventListener('DOMContentLoaded', loadCounter);
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTools();
+        loadCounter();
+    });
 </script>
 
 </body>
