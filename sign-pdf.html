@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro PDF Signer | Beautiful UI</title>
+    
+    <!-- UI Framework -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PDF Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Allison&display=swap" rel="stylesheet">
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        // Custom Tailwind Config for specific colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        signature: ['"Allison"', 'cursive'],
+                    },
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f8fafc; overflow: hidden; }
+
+        /* Workspace Pattern */
+        #workspace-bg {
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+            padding-top: 80px; /* Space for header */
+            padding-bottom: 120px; /* Space for dock */
+        }
+
+        /* The Paper Look */
+        #pdf-wrapper {
+            position: relative;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease;
+        }
+
+        /* Draggable Signature */
+        .draggable-sig {
+            position: absolute;
+            cursor: grab;
+            border: 2px dashed transparent;
+            touch-action: none;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        
+        .draggable-sig:hover, .draggable-sig.active {
+            border-color: #4f46e5;
+            background: rgba(79, 70, 229, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .draggable-sig img { width: 100%; height: 100%; pointer-events: none; }
+
+        /* Controls (Delete/Resize) */
+        .control-btn {
+            position: absolute; width: 28px; height: 28px;
+            background: white; color: #ef4444;
+            border-radius: 50%; display: none; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 20; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.1s;
+        }
+        .control-btn:hover { transform: scale(1.1); }
+        .btn-del { top: -14px; right: -14px; }
+        
+        .resize-handle {
+            position: absolute; bottom: -6px; right: -6px;
+            width: 16px; height: 16px; background: #4f46e5; border: 2px solid white;
+            border-radius: 50%; cursor: se-resize; display: none; z-index: 20;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .draggable-sig:hover .control-btn, .draggable-sig:hover .resize-handle,
+        .draggable-sig.active .control-btn, .draggable-sig.active .resize-handle { display: flex; }
+
+        /* Animations */
+        .slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Loader */
+        .loader {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); 
+            border-top: 2px solid white; border-radius: 50%; 
+            animation: spin 0.8s linear infinite; display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Header (Glassmorphism) -->
+    <header class="fixed top-0 left-0 w-full h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6 z-50 transition-all duration-300">
+        <div class="flex items-center gap-3">
+            <div class="bg-brand-600 text-white w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/30">
+                <i class="fa-solid fa-signature"></i>
+            </div>
+            <h1 class="font-bold text-slate-800 text-lg tracking-tight">PDF<span class="text-brand-600">Signer</span></h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <input type="file" id="file-input" accept="application/pdf" class="hidden">
+            <button id="upload-trigger" onclick="document.getElementById('file-input').click()" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100">
+                <i class="fa-solid fa-folder-open"></i> <span class="hidden sm:inline">Open File</span>
+            </button>
+            <button id="header-download-btn" onclick="savePDF()" class="hidden bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition shadow-lg flex items-center gap-2">
+                <span>Export</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main id="workspace-bg">
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="flex flex-col items-center justify-center text-center fade-in self-center">
+            <div class="relative mb-8 group cursor-pointer" onclick="document.getElementById('file-input').click()">
+                <div class="absolute inset-0 bg-brand-500 blur-2xl opacity-20 group-hover:opacity-40 transition duration-500 rounded-full"></div>
+                <div class="relative w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-brand-600 text-4xl border border-slate-100 group-hover:scale-110 transition duration-300">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-3">Upload your PDF</h2>
+            <p class="text-slate-500 max-w-md mx-auto text-sm leading-relaxed">
+                Secure, client-side signing. No files are ever uploaded to a server. <br> Drag & Drop your document here.
+            </p>
+        </div>
+
+        <!-- PDF Canvas Wrapper -->
+        <div id="pdf-wrapper" class="hidden bg-white">
+            <canvas id="pdf-canvas" class="block rounded-sm"></canvas>
+            <div id="signature-layer" class="absolute inset-0 w-full h-full overflow-hidden rounded-sm"></div>
+        </div>
+
+    </main>
+
+    <!-- Floating Dock (Bottom Controls) -->
+    <div id="dock" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-xl border border-slate-200/60 shadow-2xl shadow-slate-300/50 rounded-full px-2 py-2 flex items-center gap-2 z-40 slide-up hidden transition-all duration-300 hover:scale-105">
+        
+        <!-- Page Nav -->
+        <div class="flex items-center bg-slate-100/80 rounded-full px-1">
+            <button onclick="changePage(-1)" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:bg-white hover:text-brand-600 transition shadow-sm"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+            <span class="text-xs font-bold text-slate-700 w-16 text-center tabular-nums"><span id="curr-page">1</span> / <span id="total-pages">--</span></span>
+            <button onclick="changePage(1)" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:bg-white hover:text-brand-600 transition shadow-sm"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+        </div>
+
+        <div class="w-px h-6 bg-slate-300 mx-1"></div>
+
+        <!-- Main Actions -->
+        <button onclick="openModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-brand-500/40 flex items-center gap-2 transition active:scale-95">
+            <i class="fa-solid fa-pen-nib"></i> Sign
+        </button>
+        
+        <button onclick="savePDF()" class="bg-slate-800 hover:bg-slate-900 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition active:scale-95" title="Download">
+            <i class="fa-solid fa-download"></i>
+        </button>
+
+    </div>
+
+    <!-- Signature Modal -->
+    <div id="sig-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-200" id="modal-content">
+            
+            <div class="flex justify-between items-center p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800 text-lg">Add Signature</h3>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex p-2 bg-slate-50 gap-2">
+                <button onclick="switchTab('draw')" id="tab-draw" class="flex-1 py-2 rounded-xl text-sm font-bold text-brand-600 bg-white shadow-sm ring-1 ring-black/5 transition">Draw</button>
+                <button onclick="switchTab('type')" id="tab-type" class="flex-1 py-2 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-700 transition">Type</button>
+            </div>
+
+            <div class="p-6">
+                <!-- Draw Area -->
+                <div id="panel-draw">
+                    <div class="border border-slate-200 rounded-2xl bg-white relative shadow-inner overflow-hidden">
+                        <canvas id="pad-canvas" class="w-full h-40 cursor-crosshair touch-none"></canvas>
+                        <div class="absolute bottom-3 right-4 text-xs text-slate-300 font-medium pointer-events-none select-none">Draw Here</div>
+                    </div>
+                    <div class="flex justify-between mt-3 px-1">
+                        <span class="text-xs text-slate-400">Use mouse or finger</span>
+                        <button onclick="signaturePad.clear()" class="text-xs text-red-500 font-bold hover:underline">Clear Pad</button>
+                    </div>
+                </div>
+
+                <!-- Type Area -->
+                <div id="panel-type" class="hidden py-4">
+                    <input type="text" id="type-input" placeholder="Your Name" class="w-full text-center text-5xl border-b-2 border-slate-200 outline-none pb-4 focus:border-brand-500 font-signature text-slate-800 placeholder-slate-300 transition-colors">
+                    <p class="text-center text-xs text-slate-400 mt-4">Select Style</p>
+                    <div class="flex justify-center gap-3 mt-2">
+                        <button onclick="changeFont('Allison')" class="w-8 h-8 rounded-full bg-slate-800"></button>
+                        <button onclick="changeFont('Arial')" class="w-8 h-8 rounded-full bg-blue-600"></button>
+                        <button onclick="changeFont('Times')" class="w-8 h-8 rounded-full bg-red-500"></button>
+                    </div>
+                </div>
+
+                <button onclick="addSignature()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl mt-6 shadow-xl shadow-brand-500/20 active:scale-[0.98] transition-all">
+                    Insert Signature
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBAL VARIABLES ---
+        let pdfBytes = null;
+        let pdfDoc = null;
+        let pageNum = 1;
+        let scale = 1.0; 
+        
+        const canvas = document.getElementById('pdf-canvas');
+        const ctx = canvas.getContext('2d');
+        const pdfWrapper = document.getElementById('pdf-wrapper');
+        const sigLayer = document.getElementById('signature-layer');
+        const dock = document.getElementById('dock');
+        let signaturePad;
+
+        // --- INIT ---
+        window.onload = () => {
+            const padCanvas = document.getElementById('pad-canvas');
+            signaturePad = new SignaturePad(padCanvas, { 
+                minWidth: 1.5, maxWidth: 3.5, penColor: "rgb(15, 23, 42)" 
+            });
+            window.addEventListener('resize', handleResize);
+        };
+
+        function handleResize() {
+            if(pdfBytes) renderPage(pageNum);
+            resizePad();
+        }
+
+        function resizePad() {
+            const padCanvas = document.getElementById('pad-canvas');
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            padCanvas.width = padCanvas.offsetWidth * ratio;
+            padCanvas.height = padCanvas.offsetHeight * ratio;
+            padCanvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear(); // Clears on resize unfortunately
+        }
+
+        // --- 1. UPLOAD LOGIC ---
+        document.getElementById('file-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            pdfBytes = await file.arrayBuffer();
+            const loadingTask = pdfjsLib.getDocument(pdfBytes.slice(0));
+            pdfDoc = await loadingTask.promise;
+
+            document.getElementById('total-pages').textContent = pdfDoc.numPages;
+            
+            // Switch View
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('pdf-wrapper').classList.remove('hidden');
+            document.getElementById('header-download-btn').classList.remove('hidden');
+            document.getElementById('header-download-btn').classList.add('flex');
+            
+            dock.classList.remove('hidden'); // Show Dock
+            setTimeout(() => dock.classList.remove('translate-y-20', 'opacity-0'), 100);
+
+            renderPage(1);
+        });
+
+        // --- 2. RENDER LOGIC ---
+        async function renderPage(num) {
+            pageNum = num;
+            document.getElementById('curr-page').textContent = num;
+            sigLayer.innerHTML = ''; // Clear DOM signatures
+
+            const page = await pdfDoc.getPage(num);
+            
+            // Responsive Scale Calculation
+            const workspaceWidth = document.getElementById('workspace-bg').clientWidth - 40; // padding
+            const viewportRaw = page.getViewport({ scale: 1 });
+            scale = Math.min(workspaceWidth / viewportRaw.width, 1.5); // Max scale 1.5
+            
+            const viewport = page.getViewport({ scale: scale });
+
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            pdfWrapper.style.width = `${viewport.width}px`;
+            pdfWrapper.style.height = `${viewport.height}px`;
+
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        }
+
+        function changePage(offset) {
+            if (pageNum + offset >= 1 && pageNum + offset <= pdfDoc.numPages) {
+                renderPage(pageNum + offset);
+            }
+        }
+
+        // --- 3. MODAL LOGIC ---
+        function openModal() {
+            const modal = document.getElementById('sig-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Animation
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+                resizePad();
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('sig-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+
+        function switchTab(t) {
+            document.getElementById('panel-draw').classList.toggle('hidden', t !== 'draw');
+            document.getElementById('panel-type').classList.toggle('hidden', t !== 'type');
+            
+            const btnDraw = document.getElementById('tab-draw');
+            const btnType = document.getElementById('tab-type');
+            
+            const activeClass = "flex-1 py-2 rounded-xl text-sm font-bold text-brand-600 bg-white shadow-sm ring-1 ring-black/5 transition";
+            const inactiveClass = "flex-1 py-2 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-700 transition";
+
+            if (t === 'draw') {
+                btnDraw.className = activeClass;
+                btnType.className = inactiveClass;
+                resizePad();
+            } else {
+                btnType.className = activeClass;
+                btnDraw.className = inactiveClass;
+            }
+        }
+
+        // --- 4. SIGNATURE ADDITION ---
+        function addSignature() {
+            let dataUrl;
+            if (!document.getElementById('panel-draw').classList.contains('hidden')) {
+                if (signaturePad.isEmpty()) return alert("Draw something first!");
+                dataUrl = signaturePad.toDataURL();
+            } else {
+                const text = document.getElementById('type-input').value;
+                if (!text) return alert("Type your name!");
+                dataUrl = textToImage(text);
+            }
+
+            createDraggableElement(dataUrl);
+            closeModal();
+        }
+
+        function textToImage(text) {
+            const c = document.createElement('canvas');
+            const ctx = c.getContext('2d');
+            c.width = 600; c.height = 200;
+            ctx.font = "100px 'Allison'"; // Uses the loaded cursive font
+            ctx.fillStyle = "#0f172a"; // Slate 900
+            ctx.fillText(text, 20, 130);
+            return c.toDataURL();
+        }
+
+        function createDraggableElement(url) {
+            const div = document.createElement('div');
+            div.className = 'draggable-sig';
+            // Center in viewport
+            div.style.left = '30%'; 
+            div.style.top = '30%';
+            div.style.width = '30%';
+            div.style.height = 'auto';
+            div.style.aspectRatio = "3/1";
+            
+            div.innerHTML = `
+                <img src="${url}" draggable="false">
+                <div class="control-btn btn-del" onclick="this.parentElement.remove()"><i class="fa-solid fa-times"></i></div>
+                <div class="resize-handle"></div>
+            `;
+            
+            makeDraggable(div);
+            sigLayer.appendChild(div);
+        }
+
+        // --- 5. INTERACTION (DRAG & DROP) ---
+        function makeDraggable(el) {
+            let isDragging = false, isResizing = false;
+            let startX, startY, startLeft, startTop, startW, startH;
+
+   
