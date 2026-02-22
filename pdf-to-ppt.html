@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to PPT Pro | PDF Master</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PDF.js (Reads PDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- PptxGenJS (Creates PowerPoint) -->
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Initialize PDF.js Worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <style>
+        :root {
+            --ppt-red: #d24726; /* Official PowerPoint Brand Color */
+            --light: #f8fafc;
+            --dark: #0f172a;
+        }
+
+        body { font-family: 'Outfit', sans-serif; background-color: var(--light); color: var(--dark); }
+
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Loader */
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+                    <div class="w-8 h-8 rounded flex items-center justify-center bg-[#d24726] text-white shadow-sm">
+                        <i class="fa-solid fa-file-powerpoint"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">PDF<span class="text-[#d24726]">Master</span></span>
+                </div>
+                <div class="flex gap-4">
+                    <span class="px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded-full border border-red-100">
+                        <i class="fa-solid fa-layer-group mr-1"></i> Smart Layout
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6 flex justify-center items-start pt-10">
+        <div class="w-full max-w-3xl fade-in">
+            
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-slate-900">PDF to PowerPoint</h1>
+                <p class="text-slate-500 mt-2">Convert PDF documents to editable PowerPoint presentation slides.</p>
+            </div>
+
+            <!-- Tool Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                
+                <!-- Upload Zone -->
+                <div class="p-8 border-b border-slate-100">
+                    <div id="drop-zone" class="relative group w-full h-52 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#d24726] hover:bg-red-50 transition-all bg-slate-50" onclick="document.getElementById('file-input').click()">
+                        <input type="file" id="file-input" accept="application/pdf" class="hidden">
+                        
+                        <!-- Initial State -->
+                        <div id="upload-content" class="text-center pointer-events-none">
+                            <i class="fa-solid fa-file-powerpoint text-5xl text-slate-300 mb-4 group-hover:text-[#d24726] transition-colors"></i>
+                            <p class="text-lg font-bold text-slate-700">Drop PDF here</p>
+                            <p class="text-sm text-slate-400 mt-1">Convert to PPTX</p>
+                        </div>
+
+                        <!-- File Loaded State -->
+                        <div id="file-info" class="hidden flex flex-col items-center w-full px-8">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex items-center gap-4 w-full">
+                                <i class="fa-solid fa-file-pdf text-red-500 text-3xl"></i>
+                                <div class="flex-1 min-w-0 text-left">
+                                    <p id="filename" class="text-sm font-bold text-slate-800 truncate">presentation.pdf</p>
+                                    <p id="page-count" class="text-xs text-slate-500">Scanning pages...</p>
+                                </div>
+                                <button onclick="resetTool(event)" class="text-slate-400 hover:text-red-500">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div id="progress-container" class="hidden px-8 py-4 bg-slate-50 border-b border-slate-100">
+                    <div class="flex justify-between text-xs font-bold text-slate-600 mb-2">
+                        <span id="progress-status">Initializing...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-[#d24726] h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="p-6 bg-white flex justify-end gap-3">
+                    <button id="convert-btn" onclick="convertPdfToPpt()" disabled class="w-full sm:w-auto bg-slate-200 text-slate-400 font-bold py-3 px-8 rounded-xl shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed">
+                        <span class="loader hidden" id="loader"></span>
+                        <span id="btn-text">Convert to PowerPoint</span>
+                    </button>
+                </div>
+
+            </div>
+            
+            <!-- Info -->
+            <div class="mt-6 text-center text-xs text-slate-400">
+                <p><i class="fa-solid fa-shield-halved"></i> 100% Client-Side. Your presentation never leaves your browser.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Hidden Canvas for Rendering -->
+    <canvas id="pdf-render" class="hidden"></canvas>
+
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6 text-center">
+        <p class="text-slate-500 text-sm">&copy; 2023 PDF Master. Professional Tools.</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const uploadContent = document.getElementById('upload-content');
+        const fileInfo = document.getElementById('file-info');
+        const filenameDisplay = document.getElementById('filename');
+        const pageCountDisplay = document.getElementById('page-count');
+        const convertBtn = document.getElementById('convert-btn');
+        const loader = document.getElementById('loader');
+        const btnText = document.getElementById('btn-text');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressStatus = document.getElementById('progress-status');
+        const progressPercent = document.getElementById('progress-percent');
+        const canvas = document.getElementById('pdf-render');
+        const ctx = canvas.getContext('2d');
+
+        let selectedFile = null;
+        let pdfDoc = null;
+
+        // --- Drag & Drop ---
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-[#d24726]', 'bg-red-50'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-[#d24726]', 'bg-red-50'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-[#d24726]', 'bg-red-50');
+            handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') return alert("Please upload a PDF file.");
+            
+            selectedFile = file;
+            filenameDisplay.textContent = file.name;
+            uploadContent.classList.add('hidden');
+            fileInfo.classList.remove('hidden');
+
+            // Load PDF to count pages
+            const arrayBuffer = await file.arrayBuffer();
+            pdfDoc = await pdfjsLib.getDocument(arrayBuffer).promise;
+            pageCountDisplay.textContent = `${pdfDoc.numPages} Slides detected`;
+            
+            // Enable button
+            convertBtn.disabled = false;
+            convertBtn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            convertBtn.classList.add('bg-[#d24726]', 'hover:bg-[#b03518]', 'text-white', 'shadow-md');
+        }
+
+        function resetTool(e) {
+            if(e) e.stopPropagation();
+            selectedFile = null;
+            pdfDoc = null;
+            fileInput.value = '';
+            uploadContent.classList.remove('hidden');
+            fileInfo.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            convertBtn.disabled = true;
+            convertBtn.className = "w-full sm:w-auto bg-slate-200 text-slate-400 font-bold py-3 px-8 rounded-xl shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed";
+        }
+
+        // --- Conversion Logic ---
+        async function convertPdfToPpt() {
+            if (!pdfDoc) return;
+
+            // UI Init
+            convertBtn.disabled = true;
+            loader.classList.remove('hidden');
+            btnText.textContent = "Generating PPT...";
+            progressContainer.classList.remove('hidden');
+
+            try {
+                // Initialize PptxGenJS
+                const pptx = new PptxGenJS();
+                pptx.layout = 'LAYOUT_16x9'; // Default layout
+
+                const totalPages = pdfDoc.numPages;
+
+                // Loop through all pages
+                for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                    
+                    // Update Progress
+                    const pct = Math.round((pageNum / totalPages) * 100);
+                    progressBar.style.width = `${pct}%`;
+                    progressPercent.textContent = `${pct}%`;
+                    progressStatus.textContent = `Rendering Slide ${pageNum} of ${totalPages}...`;
+
+                    // 1. Get PDF Page
+                    const page = await pdfDoc.getPage(pageNum);
+                    
+                    // 2. Determine scale (Higher scale = better quality in PPT)
+                    const viewport = page.getViewport({ scale: 2 });
+                    
+                    // 3. Prepare Canvas
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    // 4. Render PDF page to Canvas
+                    const renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    await page.render(renderContext).promise;
+
+                    // 5. Convert Canvas to Data URL (Image)
+                    const imgData = canvas.toDataURL('image/jpeg', 0.8); // 0.8 quality for speed optimization
+
+                    // 6. Add to PowerPoint
+                    const slide = pptx.addSlide();
+                    // 'cover' sizing ensures it fills the slide
+                    slide.addImage({ data: imgData, x: 0, y: 0, w: '100%', h: '100%' });
+                }
+
+                progressStatus.textContent = "Finalizing PPTX file...";
+                
+                // Save File
+                await pptx.writeFile({ fileName: selectedFile.name.replace('.pdf', '.pptx') });
+
+                // Success UI
+                btnText.textContent = "Success! Downloaded";
+                loader.classList.add('hidden');
+                convertBtn.classList.replace('bg-[#d24726]', 'bg-green-600');
+                
+                setTimeout(() => {
+                    btnText.textContent = "Convert to PowerPoint";
+                    convertBtn.disabled = false;
+                    convertBtn.classList.replace('bg-green-600', 'bg-[#d24726]');
+                    progressContainer.classList.add('hidden');
+                }, 4000);
+
+            } catch (error) {
+                console.error(error);
+                alert("An error occurred during conversion.");
+                loader.classList.add('hidden');
+                btnText.textContent = "Try Again";
+                convertBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
