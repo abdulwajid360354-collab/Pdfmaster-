@@ -4,423 +4,394 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO META TAGS -->
-    <title>PDF Master - All-in-One Free PDF Tools</title>
-    <meta name="description" content="Merge, Split, Compress, Convert, and Edit PDFs for free. 20+ PDF tools including PDF to Word, Excel, PPT, and more. No installation required.">
-    <meta name="keywords" content="pdf tools, merge pdf, split pdf, compress pdf, pdf to word, unlock pdf, free pdf converter">
-    <meta name="author" content="PDF Master">
-    <meta name="monetag" content="f05b50a19c07289f5d8384547c3da240">
-
+    <!-- SEO & META -->
+    <title>PDF Master - Free Online PDF Tools</title>
+    <meta name="description" content="Merge, Split, Compress, Convert, and Edit PDFs for free. 21+ PDF tools including PDF to Word, Excel, PPT. Secure and fast.">
+    
     <!-- FONTS & ICONS -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* --- 1. CORE VARIABLES --- */
         :root {
-            --primary: #4338ca;      /* Indigo */
-            --primary-hover: #3730a3;
-            --secondary: #f472b6;    /* Pink accent */
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --radius: 12px;
+            --primary: #4f46e5;       
+            --primary-dark: #4338ca;
+            --dark: #0f172a;          
+            --text: #334155;          
+            --light-bg: #f8fafc;      
+            --white: #ffffff;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+            --radius: 16px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
         
-        body { background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        body { background-color: var(--light-bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
         a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        /* --- NAVIGATION --- */
+        
+        /* --- 2. HEADER --- */
         header {
-            background: var(--bg-card); border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 1000; padding: 0.8rem 5%;
-        }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-        
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .logo i { color: #ef4444; } /* PDF Red Icon */
-        
-        .nav-menu { display: flex; gap: 25px; }
-        .nav-link { color: var(--text-muted); font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { color: var(--primary); font-weight: 600; }
-        
-        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-            padding: 4rem 1rem; text-align: center; margin-bottom: 2rem;
-        }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #1e1b4b; letter-spacing: -0.5px; }
-        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem; }
-        
-        /* Search Box */
-        .search-box {
-            background: white; padding: 10px 20px; border-radius: 50px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-            max-width: 500px; margin: 0 auto; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border);
-        }
-        .search-box i { color: var(--text-muted); }
-        .search-box input { border: none; outline: none; width: 100%; font-size: 1rem; padding: 5px; }
-
-        /* --- LAYOUT CONTAINER --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
-
-        /* --- ADVERTISEMENT --- */
-        .ad-banner {
-            background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px;
-            height: 100px; display: flex; justify-content: center; align-items: center;
-            margin: 30px 0; color: #94a3b8; font-weight: 600; letter-spacing: 1px;
-            overflow: hidden; text-transform: uppercase;
+            background: var(--white); padding: 1rem 5%; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000;
         }
 
-        /* --- SECTIONS (SPA LOGIC) --- */
-        .page-section { display: none; animation: fadeUp 0.4s ease; }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo i { color: #ef4444; } 
+
+        .nav-links { display: flex; gap: 15px; }
+        .nav-links button { 
+            background: transparent; border: none; color: #64748b; font-size: 1rem; font-weight: 500; 
+            cursor: pointer; padding: 10px 18px; border-radius: 8px; transition: all 0.3s ease;
+        }
+        .nav-links button:hover, .nav-links button.active { color: var(--primary); background: #e0e7ff; font-weight: 700; }
+        
+        .menu-btn { display: none; font-size: 1.5rem; color: var(--dark); cursor: pointer; }
+
+        /* --- 3. SECTIONS (SPA Logic) --- */
+        .page-section { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; animation: fadeUp 0.5s ease; width: 100%; }
         .page-section.active { display: block; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- TOOLS GRID --- */
-        .tools-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px; padding-bottom: 40px;
+        /* --- 4. HERO SECTION (Updated) --- */
+        .hero { 
+            text-align: center; padding: 5rem 1rem; 
+            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%); 
+            border-radius: 0 0 50px 50px; margin-bottom: 50px; 
         }
+        .hero h1 { font-size: 3.2rem; color: var(--dark); margin-bottom: 20px; letter-spacing: -1px; line-height: 1.2; font-weight: 800; }
+        .hero p { font-size: 1.2rem; color: #475569; max-width: 700px; margin: 0 auto; }
 
-        .tool-card {
-            background: var(--bg-card); padding: 30px 20px; border-radius: var(--radius);
-            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
-            display: flex; flex-direction: column; align-items: flex-start;
-            transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden;
+        /* --- 5. TOOLS GRID --- */
+        .tools-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; padding-bottom: 60px; 
         }
-
-        .tool-card:hover {
-            transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--primary);
-        }
-
-        .tool-icon {
-            width: 55px; height: 55px; border-radius: 14px; display: flex;
-            align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 20px;
-        }
-
-        .tool-card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-main); }
-        .tool-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
-
-        /* Icon Colors */
-        .bg-red { background: #fee2e2; color: #ef4444; }
-        .bg-blue { background: #dbeafe; color: #3b82f6; }
-        .bg-green { background: #d1fae5; color: #10b981; }
-        .bg-purple { background: #ede9fe; color: #8b5cf6; }
-        .bg-orange { background: #ffedd5; color: #f97316; }
-        .bg-gray { background: #f1f5f9; color: #64748b; }
-
-        /* --- TEXT CONTENT (About, Privacy etc) --- */
-        .content-card {
-            background: white; padding: 40px; border-radius: var(--radius);
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border);
-            max-width: 900px; margin: 0 auto 40px; line-height: 1.8;
-        }
-        .content-card h2 { font-size: 2rem; margin-bottom: 20px; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-        .content-card h3 { font-size: 1.3rem; margin: 25px 0 10px; color: var(--primary); }
-        .content-card ul { list-style: disc; margin-left: 20px; margin-bottom: 15px; }
-
-        /* --- FOOTER --- */
-        footer {
-            background: white; border-top: 1px solid var(--border); padding: 40px 20px;
-            text-align: center; margin-top: auto;
-        }
-        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-        .footer-links button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; }
-        .footer-links button:hover { color: var(--primary); }
         
-        /* --- COOKIE CONSENT --- */
-        .cookie-popup {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 15px 30px; border-radius: 50px;
-            display: none; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 2000; width: 90%; max-width: 600px;
+        /* Tool Card Styles */
+        .tool-card {
+            background: var(--white); padding: 35px 30px; border-radius: var(--radius);
+            border: 1px solid #f1f5f9; cursor: pointer; box-shadow: var(--shadow);
+            transition: all 0.3s ease; text-decoration: none; display: flex; flex-direction: column; 
+            align-items: flex-start; position: relative; overflow: hidden;
         }
-        .cookie-btn { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+        .tool-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: transparent; }
+        
+        .tool-icon { 
+            font-size: 2.2rem; margin-bottom: 20px; display: inline-flex; 
+            width: 70px; height: 70px; align-items: center; justify-content: center; 
+            border-radius: 18px; transition: 0.3s;
+        }
+        .tool-card h3 { font-size: 1.3rem; margin-bottom: 10px; font-weight: 700; color: var(--dark); }
+        .tool-card p { font-size: 0.95rem; color: #64748b; line-height: 1.6; }
 
-        /* --- RESPONSIVE --- */
+        /* COLORS */
+        .tc-red .tool-icon { color: #ef4444; background: #fee2e2; }
+        .tc-yellow .tool-icon { color: #d97706; background: #fef3c7; }
+        .tc-green .tool-icon { color: #10b981; background: #d1fae5; }
+        .tc-blue .tool-icon { color: #3b82f6; background: #dbeafe; }
+        .tc-purple .tool-icon { color: #8b5cf6; background: #ede9fe; }
+        .tc-orange .tool-icon { color: #f97316; background: #ffedd5; }
+        
+        /* --- 6. CONTENT PAGES --- */
+        .content-box { background: var(--white); padding: 50px; border-radius: 20px; box-shadow: var(--shadow); line-height: 1.8; color: var(--text); }
+        .content-box h2 { color: var(--dark); margin-bottom: 30px; font-size: 2.2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+        .content-box h3 { color: var(--primary); margin-top: 30px; margin-bottom: 15px; font-size: 1.4rem; }
+        .content-box p { font-size: 1.05rem; margin-bottom: 15px; }
+        .content-box ul { margin-left: 20px; margin-bottom: 20px; }
+
+        /* Form */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; outline: none; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .submit-btn { background: var(--primary); color: white; padding: 14px 35px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1.1rem; transition: 0.3s; }
+        .submit-btn:hover { background: var(--primary-dark); }
+
+        /* --- 7. FOOTER --- */
+        footer { background: var(--white); padding: 50px 20px; text-align: center; border-top: 1px solid #e2e8f0; margin-top: auto; }
+        .footer-nav { margin-bottom: 20px; }
+        .footer-nav button { background: none; border: none; color: #64748b; cursor: pointer; margin: 0 15px; font-size: 1rem; font-weight: 500; }
+        .footer-nav button:hover { color: var(--primary); text-decoration: underline; }
+
+        /* RESPONSIVE */
         @media(max-width: 768px) {
-            .nav-menu {
-                display: none; position: absolute; top: 100%; left: 0; width: 100%;
-                background: white; flex-direction: column; padding: 20px;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.05); text-align: center;
+            .nav-links { 
+                display: none; position: absolute; top: 100%; left: 0; width: 100%; 
+                background: white; flex-direction: column; padding: 25px; 
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center;
             }
-            .nav-menu.active { display: flex; }
-            .mobile-toggle { display: block; }
-            .hero h1 { font-size: 2rem; }
+            .nav-links.active { display: flex; }
+            .menu-btn { display: block; }
+            .hero h1 { font-size: 2.4rem; }
             .tools-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGATION -->
+    <!-- Header -->
     <header>
-        <div class="nav-container">
-            <div class="logo" onclick="switchPage('home')">
-                <i class="fa-solid fa-file-pdf"></i> PDF Master
-            </div>
-            <div class="mobile-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
-            <nav class="nav-menu" id="navMenu">
-                <div class="nav-link active" onclick="switchPage('home')">Home</div>
-                <div class="nav-link" onclick="switchPage('about')">About</div>
-                <div class="nav-link" onclick="switchPage('privacy')">Privacy</div>
-                <div class="nav-link" onclick="switchPage('contact')">Contact</div>
-            </nav>
-        </div>
+        <div class="logo" onclick="showPage('home')"><i class="fa-solid fa-file-pdf"></i> PDF Master</div>
+        <div class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+        <nav class="nav-links" id="navLinks">
+            <button onclick="showPage('home')" class="active" id="btn-home">Home</button>
+            <button onclick="showPage('about')" id="btn-about">About Us</button>
+            <button onclick="showPage('privacy')" id="btn-privacy">Privacy</button>
+            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
+        </nav>
     </header>
 
-    <!-- ======================= 
-         1. HOME SECTION 
-    ======================== -->
-    <main id="home-page" class="page-section active">
+    <!-- 1. HOME SECTION -->
+    <div id="home-page" class="page-section active">
         
-        <!-- HERO -->
+        <!-- Hero (No Search Bar) -->
         <div class="hero">
-            <div class="container">
-                <h1>Every PDF Tool You Need.</h1>
-                <p>Merge, split, compress, convert, and unlock your PDFs. 100% Free & Secure.</p>
-                
-                <!-- Search Filter -->
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="toolSearch" placeholder="Search for tools (e.g., 'Word', 'Merge')..." onkeyup="filterTools()">
+            <h1>We Make PDF Easy.</h1>
+            <p>All the tools you'll ever need to work with PDFs in one place. Merge, Split, Convert, and Edit for free.</p>
+        </div>
+
+        <!-- Ad Placeholder -->
+        <div style="max-width:728px; margin:0 auto 50px; background:#f1f5f9; padding:25px; text-align:center; border-radius:12px; border:2px dashed #cbd5e1; color:#94a3b8; font-weight:700; letter-spacing:1px;">
+            AD SPACE (TOP BANNER)
+        </div>
+
+        <!-- TOOLS GRID (21+ Tools) -->
+        <div class="tools-grid">
+            
+            <!-- Row 1 -->
+            <a href="merge-pdf.html" class="tool-card tc-red">
+                <div class="tool-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>Merge PDF</h3>
+                <p>Combine multiple PDF files into one unified document.</p>
+            </a>
+            
+            <a href="split-pdf.html" class="tool-card tc-yellow">
+                <div class="tool-icon"><i class="fa-solid fa-scissors"></i></div>
+                <h3>Split PDF</h3>
+                <p>Extract specific pages or split file into parts.</p>
+            </a>
+
+            <a href="compress-pdf.html" class="tool-card tc-green">
+                <div class="tool-icon"><i class="fa-solid fa-compress"></i></div>
+                <h3>Compress PDF</h3>
+                <p>Reduce file size while maintaining the best quality.</p>
+            </a>
+
+            <!-- Row 2 -->
+            <a href="pdf-to-word.html" class="tool-card tc-blue">
+                <div class="tool-icon"><i class="fa-solid fa-file-word"></i></div>
+                <h3>PDF to Word</h3>
+                <p>Convert your PDF to editable Word documents (DOCX).</p>
+            </a>
+
+            <a href="word-to-pdf.html" class="tool-card tc-blue">
+                <div class="tool-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <h3>Word to PDF</h3>
+                <p>Convert Microsoft Word files to PDF format.</p>
+            </a>
+
+            <a href="pdf-to-jpg.html" class="tool-card tc-purple">
+                <div class="tool-icon"><i class="fa-regular fa-image"></i></div>
+                <h3>PDF to JPG</h3>
+                <p>Convert each PDF page into a JPG image.</p>
+            </a>
+
+            <!-- Row 3 -->
+            <a href="jpg-to-pdf.html" class="tool-card tc-purple">
+                <div class="tool-icon"><i class="fa-regular fa-images"></i></div>
+                <h3>JPG to PDF</h3>
+                <p>Convert JPG images to PDF in seconds.</p>
+            </a>
+
+            <a href="excel-to-pdf.html" class="tool-card tc-green">
+                <div class="tool-icon"><i class="fa-solid fa-file-excel"></i></div>
+                <h3>Excel to PDF</h3>
+                <p>Convert Excel spreadsheets to PDF documents.</p>
+            </a>
+
+            <a href="pdf-to-excel.html" class="tool-card tc-green">
+                <div class="tool-icon"><i class="fa-solid fa-table"></i></div>
+                <h3>PDF to Excel</h3>
+                <p>Pull data straight from PDFs into Excel tables.</p>
+            </a>
+
+            <!-- Row 4 -->
+            <a href="ppt-to-pdf.html" class="tool-card tc-orange">
+                <div class="tool-icon"><i class="fa-solid fa-file-powerpoint"></i></div>
+                <h3>PPT to PDF</h3>
+                <p>Convert PowerPoint presentations to PDF.</p>
+            </a>
+
+            <a href="pdf-to-ppt.html" class="tool-card tc-orange">
+                <div class="tool-icon"><i class="fa-solid fa-file-powerpoint"></i></div>
+                <h3>PDF to PPT</h3>
+                <p>Turn your PDF files into editable PPT slides.</p>
+            </a>
+
+            <a href="delete-pages.html" class="tool-card tc-red">
+                <div class="tool-icon"><i class="fa-solid fa-trash-can"></i></div>
+                <h3>Delete Pages</h3>
+                <p>Remove unwanted pages from your PDF.</p>
+            </a>
+
+            <!-- Row 5 -->
+            <a href="unlock-pdf.html" class="tool-card tc-blue">
+                <div class="tool-icon"><i class="fa-solid fa-unlock"></i></div>
+                <h3>Unlock PDF</h3>
+                <p>Remove password security from PDF files.</p>
+            </a>
+
+            <a href="protect-pdf.html" class="tool-card tc-blue">
+                <div class="tool-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Protect PDF</h3>
+                <p>Encrypt your PDF file with a password.</p>
+            </a>
+
+            <a href="rotate-pdf.html" class="tool-card tc-yellow">
+                <div class="tool-icon"><i class="fa-solid fa-rotate-right"></i></div>
+                <h3>Rotate PDF</h3>
+                <p>Rotate your PDF pages 90 degrees.</p>
+            </a>
+
+            <!-- Row 6 -->
+            <a href="add-watermark.html" class="tool-card tc-purple">
+                <div class="tool-icon"><i class="fa-solid fa-stamp"></i></div>
+                <h3>Add Watermark</h3>
+                <p>Stamp an image or text over your PDF.</p>
+            </a>
+
+            <a href="page-numbers.html" class="tool-card tc-red">
+                <div class="tool-icon"><i class="fa-solid fa-list-ol"></i></div>
+                <h3>Page Numbers</h3>
+                <p>Add page numbers into your PDF with ease.</p>
+            </a>
+
+            <a href="sign-pdf.html" class="tool-card tc-blue">
+                <div class="tool-icon"><i class="fa-solid fa-file-signature"></i></div>
+                <h3>Sign PDF</h3>
+                <p>Sign yourself or request electronic signatures.</p>
+            </a>
+
+            <!-- Row 7 -->
+            <a href="repair-pdf.html" class="tool-card tc-green">
+                <div class="tool-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <h3>Repair PDF</h3>
+                <p>Recover data from a corrupted PDF file.</p>
+            </a>
+
+            <a href="organize-pdf.html" class="tool-card tc-orange">
+                <div class="tool-icon"><i class="fa-solid fa-sort"></i></div>
+                <h3>Organize PDF</h3>
+                <p>Sort, reorder, or delete pages.</p>
+            </a>
+
+            <a href="grayscale-pdf.html" class="tool-card tc-purple">
+                <div class="tool-icon"><i class="fa-solid fa-filter"></i></div>
+                <h3>Grayscale PDF</h3>
+                <p>Convert PDF text and images to black & white.</p>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- 2. ABOUT PAGE -->
+    <div id="about-page" class="page-section">
+        <div class="content-box">
+            <h2>About PDF Master</h2>
+            <p>Welcome to <strong>PDF Master</strong>, your #1 source for all things related to PDF management. We are dedicated to providing you the very best of online PDF tools, with a focus on speed, data security, and ease of access.</p>
+            
+            <h3>Our Mission</h3>
+            <p>In a digital world, handling documents shouldn't be a hassle. Our mission is to simplify PDF operations for students, professionals, and businesses. We believe that basic file operations like merging, splitting, and converting should be free and accessible to everyone, everywhere.</p>
+
+            <h3>Why Choose Us?</h3>
+            <ul>
+                <li><strong>Privacy First:</strong> We process files locally or secure cloud servers. Files are deleted automatically.</li>
+                <li><strong>100% Free:</strong> No credit card required. No hidden fees.</li>
+                <li><strong>Cross-Platform:</strong> Works on Windows, Mac, Linux, Android, and iOS.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 3. PRIVACY POLICY -->
+    <div id="privacy-page" class="page-section">
+        <div class="content-box">
+            <h2>Privacy Policy</h2>
+            <p>At PDF Master, accessible from our website, one of our main priorities is the privacy of our visitors.</p>
+
+            <h3>How We Handle Files</h3>
+            <p>When you upload a file to PDF Master for processing, it is transferred via a secure connection (SSL). We do not read, look at, or share your files. All files are automatically deleted from our servers after processing.</p>
+
+            <h3>Cookies</h3>
+            <p>We use cookies to improve user experience and show personalized ads. By using our website, you agree to the use of cookies.</p>
+
+            <h3>Data Security</h3>
+            <p>We employ industry-standard security measures to protect against unauthorized access, alteration, disclosure, or destruction of your personal information and data stored on our site.</p>
+        </div>
+    </div>
+
+    <!-- 4. CONTACT PAGE -->
+    <div id="contact-page" class="page-section">
+        <div class="content-box">
+            <h2>Contact Us</h2>
+            <p>Have a question, feedback, or found a bug? We'd love to hear from you!</p>
+            
+            <form onsubmit="event.preventDefault(); alert('Message Sent Successfully!');">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" placeholder="John Doe" required>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea rows="5" placeholder="How can we help you?" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
         </div>
+    </div>
 
-        <!-- AD SLOT 1 -->
-        <div class="container">
-            <div class="ad-banner">
-                <p>Google AdSense - Top Banner (728x90)</p>
-            </div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-nav">
+            <button onclick="showPage('home')">Home</button> |
+            <button onclick="showPage('about')">About</button> |
+            <button onclick="showPage('privacy')">Privacy</button> |
+            <button onclick="showPage('contact')">Contact</button>
         </div>
+        <p>&copy; 2024 PDF Master. All rights reserved.</p>
+    </footer>
 
-        <!-- TOOLS GRID -->
-        <div class="container">
-            <div class="tools-grid" id="toolsGrid">
-                
-                <!-- 1. Merge -->
-                <a href="merge-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-red"><i class="fa-solid fa-layer-group"></i></div>
-                    <h3>Merge PDF</h3>
-                    <p>Combine multiple PDF files into one single document.</p>
-                </a>
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Navigation Logic
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            // Remove active class from nav
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Activate button
+            const btn = document.getElementById('btn-' + pageId);
+            if(btn) btn.classList.add('active');
 
-                <!-- 2. Split -->
-                <a href="split-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-red"><i class="fa-solid fa-scissors"></i></div>
-                    <h3>Split PDF</h3>
-                    <p>Separate one page or a whole set for easy conversion.</p>
-                </a>
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
 
-                <!-- 3. Compress -->
-                <a href="compress-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-green"><i class="fa-solid fa-compress"></i></div>
-                    <h3>Compress PDF</h3>
-                    <p>Reduce file size while optimizing for maximal PDF quality.</p>
-                </a>
-
-                <!-- 4. PDF to Word -->
-                <a href="pdf-to-word.html" class="tool-card">
-                    <div class="tool-icon bg-blue"><i class="fa-solid fa-file-word"></i></div>
-                    <h3>PDF to Word</h3>
-                    <p>Convert your PDFs to editable Word documents.</p>
-                </a>
-
-                <!-- 5. Word to PDF -->
-                <a href="word-to-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-blue"><i class="fa-solid fa-file-pdf"></i></div>
-                    <h3>Word to PDF</h3>
-                    <p>Make DOC and DOCX files easy to read by converting them to PDF.</p>
-                </a>
-
-                <!-- 6. PDF to Excel -->
-                <a href="pdf-to-excel.html" class="tool-card">
-                    <div class="tool-icon bg-green"><i class="fa-solid fa-file-excel"></i></div>
-                    <h3>PDF to Excel</h3>
-                    <p>Pull data straight from PDFs into Excel spreadsheets.</p>
-                </a>
-
-                <!-- 7. Excel to PDF -->
-                <a href="excel-to-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-green"><i class="fa-solid fa-table"></i></div>
-                    <h3>Excel to PDF</h3>
-                    <p>Make columns and rows easier to read by converting to PDF.</p>
-                </a>
-
-                <!-- 8. PDF to JPG -->
-                <a href="pdf-to-jpg.html" class="tool-card">
-                    <div class="tool-icon bg-purple"><i class="fa-regular fa-image"></i></div>
-                    <h3>PDF to JPG</h3>
-                    <p>Convert each PDF page into a JPG or extract all images.</p>
-                </a>
-
-                <!-- 9. JPG to PDF -->
-                <a href="jpg-to-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-purple"><i class="fa-regular fa-images"></i></div>
-                    <h3>JPG to PDF</h3>
-                    <p>Adjust the orientation and margins of images.</p>
-                </a>
-
-                <!-- 10. PPT to PDF -->
-                <a href="ppt-to-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-orange"><i class="fa-solid fa-file-powerpoint"></i></div>
-                    <h3>PPT to PDF</h3>
-                    <p>Make PowerPoints easy to view by converting them to PDF.</p>
-                </a>
-
-                <!-- 11. PDF to PPT -->
-                <a href="pdf-to-ppt.html" class="tool-card">
-                    <div class="tool-icon bg-orange"><i class="fa-solid fa-file-powerpoint"></i></div>
-                    <h3>PDF to PPT</h3>
-                    <p>Turn your PDF files into easy to edit PPT and PPTX slideshows.</p>
-                </a>
-
-                <!-- 12. Delete Pages -->
-                <a href="delete-pages.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-trash-can"></i></div>
-                    <h3>Delete Pages</h3>
-                    <p>Remove pages from your document.</p>
-                </a>
-
-                <!-- 13. Rotate PDF -->
-                <a href="rotate-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-rotate-right"></i></div>
-                    <h3>Rotate PDF</h3>
-                    <p>Rotate your PDF pages 90 degrees clockwise.</p>
-                </a>
-
-                <!-- 14. Unlock PDF -->
-                <a href="unlock-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-unlock"></i></div>
-                    <h3>Unlock PDF</h3>
-                    <p>Remove password security from PDF files.</p>
-                </a>
-
-                <!-- 15. Protect PDF -->
-                <a href="protect-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>Protect PDF</h3>
-                    <p>Encrypt your PDF with a password.</p>
-                </a>
-
-                <!-- 16. Add Watermark -->
-                <a href="add-watermark.html" class="tool-card">
-                    <div class="tool-icon bg-purple"><i class="fa-solid fa-stamp"></i></div>
-                    <h3>Watermark</h3>
-                    <p>Stamp an image or text over your PDF.</p>
-                </a>
-
-                <!-- 17. Page Numbers -->
-                <a href="page-numbers.html" class="tool-card">
-                    <div class="tool-icon bg-blue"><i class="fa-solid fa-list-ol"></i></div>
-                    <h3>Page Numbers</h3>
-                    <p>Add page numbers into your PDF with ease.</p>
-                </a>
-
-                <!-- 18. Sign PDF -->
-                <a href="sign-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-red"><i class="fa-solid fa-file-signature"></i></div>
-                    <h3>Sign PDF</h3>
-                    <p>Sign yourself or request electronic signatures.</p>
-                </a>
-
-                <!-- 19. Repair PDF -->
-                <a href="repair-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                    <h3>Repair PDF</h3>
-                    <p>Recover data from a corrupted or damaged PDF file.</p>
-                </a>
-
-                <!-- 20. Organize PDF -->
-                <a href="organize-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-purple"><i class="fa-solid fa-sort"></i></div>
-                    <h3>Organize PDF</h3>
-                    <p>Sort pages of your PDF file however you like.</p>
-                </a>
-                
-                <!-- 21. Grayscale PDF -->
-                <a href="grayscale-pdf.html" class="tool-card">
-                    <div class="tool-icon bg-gray"><i class="fa-solid fa-filter"></i></div>
-                    <h3>Grayscale</h3>
-                    <p>Convert your PDF text and images to black and white.</p>
-                </a>
-
-            </div>
-        </div>
-
-        <!-- AD SLOT 2 -->
-        <div class="container">
-            <div class="ad-banner">
-                <p>Google AdSense - Bottom Banner</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- ======================= 
-         2. ABOUT PAGE 
-    ======================== -->
-    <main id="about-page" class="page-section">
-        <div class="container">
-            <div class="content-card">
-                <h2>About PDF Master</h2>
-                <p>PDF Master is a web-based PDF software, established in 2024. We believe that dealing with PDF files should be easy and free. We have created a suite of 20+ premium tools that live in your browser.</p>
-                
-                <h3>Why Choose Us?</h3>
-                <ul>
-                    <li><strong>Privacy Guaranteed:</strong> We do not store your files. They are processed locally or deleted instantly from temporary servers.</li>
-                    <li><strong>Fast & Free:</strong> No registration, no installation, and 100% free for basic use.</li>
-                    <li><strong>Cross-Platform:</strong> Works on Windows, Mac, Linux, Android, and iOS.</li>
-                </ul>
-            </div>
-        </div>
-    </main>
-
-    <!-- ======================= 
-         3. PRIVACY POLICY 
-    ======================== -->
-    <main id="privacy-page" class="page-section">
-        <div class="container">
-            <div class="content-card">
-                <h2>Privacy Policy</h2>
-                <p>Your privacy is important to us. This policy explains how we handle your data.</p>
-                
-                <h3>Files & Data</h3>
-                <p>When you use our tools (like Merge or Convert), your files are processed securely. We do not look at them, and we do not store them. They are automatically deleted from our processing servers after 1 hour.</p>
-                
-                <h3>Cookies</h3>
-                <p>We use cookies to improve user experience and serve personalized ads via Google AdSense.</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- ======================= 
-         4. CONTACT PAGE 
-    ======================== -->
-    <main id="contact-page" class="page-section">
-        <div class="container">
-            <div class="content-card" style="text-align: center;">
-                <h2>Contact Us</h2>
-                <p>Have a question or feature request?</p>
-                <p>Email us at: <strong>support@pdfmaster.com</strong></p>
-                <br>
-                <button class="cookie-btn" onclick="alert('Email client opened!')">Send Email</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- COOKIE CONSENT -->
-    <div class="cookie-popup" id="cookieBanner">
-        <span>🍪 We use cookies to ensure you get the best experience.</span>
-        <button class="cookie-btn" onclick="acceptCookies()">Accept</button
+        // 2. Mobile Menu Toggle
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+    </script>
+</body>
+        </html>
