@@ -4,31 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO META TAGS (AdSense & Ranking ke liye Zaroori) -->
+    <!-- ==========================================
+         SEO META TAGS (Rank & AdSense ke liye)
+    =========================================== -->
     <title>PDF Master - Free Online PDF Tools (Merge, Split, Convert)</title>
-    <meta name="description" content="Best free online PDF tools. Merge, Split, Compress, Convert PDF to Word, JPG to PDF and more. 100% free, secure, and fast. No software installation required.">
-    <meta name="keywords" content="pdf tools, merge pdf, split pdf, compress pdf, pdf to word, online pdf converter, free pdf software">
-    <meta name="author" content="PDF Master">
+    <meta name="description" content="100% Free online PDF tools. Merge PDF, Split PDF, Compress, Convert PDF to Word, JPG to PDF. Secure, fast, and no installation required.">
+    <meta name="keywords" content="merge pdf, split pdf, compress pdf, pdf to word, online pdf converter, free pdf tools, pdf editor">
+    <meta name="author" content="PDF Master Team">
     <meta name="robots" content="index, follow">
     
-    <!-- Monetag / AdSense Verification Code yahan daalein -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PDF Master - All-in-One PDF Solutions">
+    <meta property="og:description" content="Convert and Edit PDFs for free. Fast and Secure.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=PDF+Master">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="PDF Master - Free PDF Tools">
+    <meta property="twitter:description" content="Merge, Split, and Convert PDFs easily.">
+
+    <!-- Monetization Verification -->
     <meta name="monetag" content="f05b50a19c07289f5d8384547c3da240">
 
     <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
+    <!-- CSS STYLES -->
     <style>
-        /* --- CORE STYLES --- */
+        /* --- CORE VARIABLES --- */
         :root {
             --primary: #4f46e5;       
             --secondary: #ec4899;     
             --dark: #0f172a;          
             --light: #f8fafc;         
+            --text-gray: #64748b;
             --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
 
         body {
             background-color: var(--light);
@@ -36,52 +51,66 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* HEADER */
+        /* --- HEADER --- */
         header {
             background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .nav-links { display: flex; gap: 15px; }
-        .nav-links button { background: none; border: none; color: #64748b; font-size: 1rem; font-weight: 500; cursor: pointer; transition: 0.3s; padding: 5px 10px; }
-        .nav-links button:hover, .nav-links button.active { color: var(--primary); font-weight: 700; }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links button { 
+            background: none; border: none; color: var(--text-gray); font-size: 1rem; font-weight: 500; 
+            cursor: pointer; transition: 0.3s; padding: 5px 10px; border-radius: 5px;
+        }
+        .nav-links button:hover, .nav-links button.active { color: var(--primary); background: #e0e7ff; font-weight: 600; }
+        
+        /* Mobile Menu Button */
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); }
 
-        /* SECTIONS */
-        .page-section { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease-in-out; width: 100%; }
+        /* --- SECTIONS --- */
+        .page-section { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s ease; width: 100%; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HERO */
-        .hero { text-align: center; padding: 3rem 1rem; background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%); border-radius: 0 0 30px 30px; margin-bottom: 30px; }
-        .hero h1 { font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
-        
-        /* ADS */
-        .ad-container { width: 100%; background-color: #f1f5f9; margin: 20px auto; display: flex; justify-content: center; align-items: center; color: #94a3b8; font-weight: bold; border: 1px dashed #cbd5e1; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; overflow: hidden; position: relative; }
-        .ad-banner { max-width: 728px; height: 90px; }
-        .ad-square { width: 300px; height: 250px; margin: 20px auto; }
-        .ad-grid-wrapper { grid-column: 1 / -1; width: 100%; margin: 20px 0; }
-
-        /* GRID */
-        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 20px; }
-        
-        /* TOOL CARD */
-        a.tool-card {
-            background: white; padding: 30px 20px; border-radius: 20px; text-align: center;
-            border: 1px solid #f1f5f9; cursor: pointer; box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            text-decoration: none; display: block; color: var(--dark);
+        /* --- HERO --- */
+        .hero { 
+            text-align: center; padding: 4rem 1rem; 
+            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%); 
+            border-radius: 0 0 50px 50px; margin-bottom: 40px; 
         }
-        a.tool-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15); }
-        
-        .tool-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; padding: 15px; border-radius: 15px; }
-        .tool-card h3 { font-size: 1.2rem; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
-        .tool-card p { font-size: 0.9rem; color: #94a3b8; }
+        .hero h1 { font-size: 3rem; color: var(--dark); margin-bottom: 15px; letter-spacing: -1px; }
+        .hero p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto; }
 
-        /* Tool Colors */
+        /* --- ADS CONTAINERS --- */
+        .ad-container { 
+            width: 100%; max-width: 728px; height: 90px;
+            background-color: #f1f5f9; margin: 30px auto; 
+            display: flex; justify-content: center; align-items: center; 
+            color: #cbd5e1; font-weight: bold; border: 2px dashed #cbd5e1; 
+            border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; 
+            overflow: hidden; 
+        }
+
+        /* --- TOOLS GRID --- */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; padding: 0 10px; }
+        
+        /* Tool Card Styles */
+        a.tool-card {
+            background: white; padding: 35px 25px; border-radius: 20px; text-align: center;
+            border: 1px solid #f1f5f9; cursor: pointer; box-shadow: var(--shadow);
+            transition: all 0.3s ease; text-decoration: none; display: block; color: var(--dark);
+        }
+        a.tool-card:hover { transform: translateY(-7px); border-color: var(--primary); box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.2); }
+        
+        .tool-icon { font-size: 2.5rem; margin-bottom: 20px; display: inline-flex; width: 70px; height: 70px; align-items: center; justify-content: center; border-radius: 18px; }
+        .tool-card h3 { font-size: 1.25rem; margin-bottom: 10px; font-weight: 700; }
+        .tool-card p { font-size: 0.95rem; color: var(--text-gray); line-height: 1.5; }
+
+        /* Colors */
         .tc-red .tool-icon { color: #ef4444; background: #fee2e2; }
         .tc-yellow .tool-icon { color: #f59e0b; background: #fef3c7; }
         .tc-green .tool-icon { color: #10b981; background: #d1fae5; }
@@ -89,242 +118,226 @@
         .tc-purple .tool-icon { color: #8b5cf6; background: #ede9fe; }
         .tc-orange .tool-icon { color: #f97316; background: #ffedd5; }
 
-        /* CONTENT PAGES (Typography for AdSense) */
-        .content-box { background: white; padding: 40px; border-radius: 20px; box-shadow: var(--shadow); line-height: 1.8; color: #475569; }
-        .content-box h2 { color: var(--dark); margin-bottom: 25px; font-size: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
-        .content-box h3 { color: var(--primary); margin-top: 25px; margin-bottom: 15px; font-size: 1.4rem; }
-        .content-box p { margin-bottom: 15px; }
-        .content-box ul { margin-left: 20px; margin-bottom: 20px; }
-        .content-box li { margin-bottom: 10px; }
-        
-        /* FORM */
+        /* --- CONTENT PAGES (About, Privacy etc) --- */
+        .content-box { background: white; padding: 50px; border-radius: 20px; box-shadow: var(--shadow); line-height: 1.8; color: #334155; }
+        .content-box h2 { color: var(--dark); margin-bottom: 30px; font-size: 2.2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+        .content-box h3 { color: var(--primary); margin-top: 30px; margin-bottom: 15px; font-size: 1.5rem; }
+        .content-box p, .content-box ul { margin-bottom: 15px; font-size: 1.05rem; }
+        .content-box li { margin-bottom: 8px; margin-left: 20px; }
+
+        /* --- CONTACT FORM --- */
+        .contact-wrapper { max-width: 600px; margin: 0 auto; }
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
-        .submit-btn { background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        .form-group input, .form-group textarea { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; outline: none; font-size: 1rem; transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        .submit-btn { background: var(--primary); color: white; padding: 14px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; font-size: 1rem; transition: 0.3s; }
+        .submit-btn:hover { background: #4338ca; transform: translateY(-2px); }
 
-        /* COOKIE BANNER */
-        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; color: white; padding: 15px 5%; display: none; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); }
-        .cookie-banner p { font-size: 0.9rem; margin-right: 20px; }
-        .cookie-btn { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; }
-
-        /* FOOTER */
+        /* --- FOOTER --- */
         footer { background: white; padding: 40px 20px; text-align: center; border-top: 1px solid #e2e8f0; margin-top: auto; }
-        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
-        .footer-links button { background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.95rem; }
-        .footer-links button:hover { color: var(--primary); text-decoration: underline; }
-        .counter-badge { display: inline-flex; align-items: center; gap: 10px; background: #0f172a; color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 0.9rem; margin-top: 20px; }
+        .footer-nav { margin-bottom: 20px; }
+        .footer-nav button { background: none; border: none; color: var(--text-gray); cursor: pointer; margin: 0 10px; font-size: 0.95rem; }
+        .footer-nav button:hover { color: var(--primary); text-decoration: underline; }
+        
+        .counter-badge { display: inline-flex; align-items: center; gap: 10px; background: #0f172a; color: #fff; padding: 8px 25px; border-radius: 50px; font-size: 0.9rem; margin-top: 25px; }
         .live-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        @media(max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media(max-width: 600px) { .tools-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .cookie-banner { flex-direction: column; gap: 10px; text-align: center; } }
+        /* --- COOKIE BANNER --- */
+        .cookie-banner {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #1e293b; color: white; padding: 20px;
+            border-radius: 15px; display: none; align-items: center; justify-content: space-between;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 9999; max-width: 900px; margin: 0 auto;
+        }
+        .cookie-btn { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 700; white-space: nowrap; margin-left: 20px; }
+
+        /* --- RESPONSIVE --- */
+        @media(max-width: 768px) {
+            .nav-links { display: none; } /* Hide regular nav on mobile */
+            .menu-toggle { display: block; }
+            .hero h1 { font-size: 2.2rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .cookie-banner { flex-direction: column; text-align: center; gap: 15px; }
+            .cookie-btn { margin-left: 0; width: 100%; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- HEADER -->
     <header>
         <div class="logo" onclick="showPage('home')"><i class="fa-solid fa-file-pdf"></i> PDF Master</div>
+        <div class="menu-toggle"><i class="fa-solid fa-bars"></i></div>
         <nav class="nav-links">
             <button onclick="showPage('home')" class="active" id="btn-home">Home</button>
             <button onclick="showPage('about')" id="btn-about">About Us</button>
             <button onclick="showPage('privacy')" id="btn-privacy">Privacy</button>
+            <button onclick="showPage('terms')" id="btn-terms">Terms</button>
             <button onclick="showPage('contact')" id="btn-contact">Contact</button>
         </nav>
     </header>
 
-    <!-- 1. HOME PAGE -->
+    <!-- ============================================
+         1. HOME PAGE
+    ============================================= -->
     <div id="home-page" class="page-section active">
         <div class="hero">
             <h1>We Make PDF Easy.</h1>
-            <p>All the tools you'll ever need to work with PDFs in one place. 100% Free & Secure.</p>
+            <p>The ultimate free solution to Merge, Split, and Convert your PDF files securely in the cloud.</p>
         </div>
 
-        <!-- AD SPACE 1: TOP -->
-        <div class="ad-container ad-banner">
-            <!-- Google AdSense Code yahan paste karein -->
+        <!-- AD SPACE: TOP BANNER -->
+        <div class="ad-container">
+            <!-- PASTE ADSENSE DISPLAY AD CODE HERE -->
             <p>Ad Space (Top Banner)</p>
         </div>
 
         <!-- TOOLS GRID -->
         <div class="tools-grid">
             
-            <!-- ROW 1 -->
-            <a href="merge-pdf.html" class="tool-card tc-red" onclick="incrementCounter()">
+            <!-- Tool 1 -->
+            <a href="merge-pdf.html" class="tool-card tc-red" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-layer-group"></i></div>
                 <h3>Merge PDF</h3>
-                <p>Combine multiple files.</p>
+                <p>Combine multiple PDFs into one unified document.</p>
             </a>
             
-            <a href="split-pdf.html" class="tool-card tc-yellow" onclick="incrementCounter()">
+            <!-- Tool 2 -->
+            <a href="split-pdf.html" class="tool-card tc-yellow" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-scissors"></i></div>
                 <h3>Split PDF</h3>
-                <p>Extract pages from PDF.</p>
+                <p>Extract specific pages or split file into parts.</p>
             </a>
 
-            <a href="compress-pdf.html" class="tool-card tc-green" onclick="incrementCounter()">
+            <!-- Tool 3 -->
+            <a href="compress-pdf.html" class="tool-card tc-green" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-compress"></i></div>
                 <h3>Compress PDF</h3>
-                <p>Reduce file size.</p>
+                <p>Reduce file size while maintaining quality.</p>
             </a>
 
-            <!-- ROW 2 -->
-            <a href="pdf-to-word.html" class="tool-card tc-blue" onclick="incrementCounter()">
+            <!-- Tool 4 -->
+            <a href="pdf-to-word.html" class="tool-card tc-blue" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-file-word"></i></div>
                 <h3>PDF to Word</h3>
-                <p>Convert PDF to DOCX.</p>
+                <p>Convert your PDF files to editable Word docs.</p>
             </a>
 
-            <a href="word-to-pdf.html" class="tool-card tc-blue" onclick="incrementCounter()">
+            <!-- Tool 5 -->
+            <a href="word-to-pdf.html" class="tool-card tc-blue" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-file-pdf"></i></div>
                 <h3>Word to PDF</h3>
-                <p>Convert DOCX to PDF.</p>
+                <p>Create PDF files from Microsoft Word documents.</p>
             </a>
 
-            <a href="pdf-to-jpg.html" class="tool-card tc-purple" onclick="incrementCounter()">
+            <!-- Tool 6 -->
+            <a href="pdf-to-jpg.html" class="tool-card tc-purple" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-regular fa-image"></i></div>
                 <h3>PDF to JPG</h3>
-                <p>Convert pages to images.</p>
+                <p>Convert each PDF page into a JPG image.</p>
             </a>
-
-            <!-- ADVERTISEMENT (IN-FEED) -->
-            <div class="ad-grid-wrapper">
-                <div class="ad-container ad-banner">
-                    <!-- Google AdSense In-Feed Code -->
-                    <p>Ad Space (In-Feed)</p>
-                </div>
-            </div>
-
-            <!-- ROW 3 -->
-            <a href="jpg-to-pdf.html" class="tool-card tc-purple" onclick="incrementCounter()">
-                <div class="tool-icon"><i class="fa-regular fa-images"></i></div>
-                <h3>JPG to PDF</h3>
-                <p>Images to PDF file.</p>
-            </a>
-
-            <a href="excel-to-pdf.html" class="tool-card tc-green" onclick="incrementCounter()">
+            
+            <!-- Tool 7 -->
+            <a href="excel-to-pdf.html" class="tool-card tc-green" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-file-excel"></i></div>
                 <h3>Excel to PDF</h3>
-                <p>XLSX to PDF document.</p>
+                <p>Convert spreadsheets to PDF documents.</p>
             </a>
 
-            <a href="pdf-to-excel.html" class="tool-card tc-green" onclick="incrementCounter()">
-                <div class="tool-icon"><i class="fa-solid fa-table"></i></div>
-                <h3>PDF to Excel</h3>
-                <p>PDF tables to XLSX.</p>
-            </a>
-
-            <!-- ROW 4 -->
-            <a href="ppt-to-pdf.html" class="tool-card tc-orange" onclick="incrementCounter()">
-                <div class="tool-icon"><i class="fa-solid fa-file-powerpoint"></i></div>
-                <h3>PPT to PDF</h3>
-                <p>PowerPoint to PDF.</p>
-            </a>
-
-            <a href="delete-pages.html" class="tool-card tc-red" onclick="incrementCounter()">
-                <div class="tool-icon"><i class="fa-solid fa-trash-can"></i></div>
-                <h3>Delete Pages</h3>
-                <p>Remove pages from PDF.</p>
-            </a>
-
-            <a href="protect-pdf.html" class="tool-card tc-blue" onclick="incrementCounter()">
+            <!-- Tool 8 -->
+            <a href="protect-pdf.html" class="tool-card tc-orange" onclick="trackClick()">
                 <div class="tool-icon"><i class="fa-solid fa-shield-halved"></i></div>
                 <h3>Protect PDF</h3>
-                <p>Encrypt with Password.</p>
+                <p>Encrypt your PDF file with a password.</p>
             </a>
+
+             <!-- Tool 9 -->
+             <a href="unlock-pdf.html" class="tool-card tc-red" onclick="trackClick()">
+                <div class="tool-icon"><i class="fa-solid fa-unlock"></i></div>
+                <h3>Unlock PDF</h3>
+                <p>Remove security password from PDF files.</p>
+            </a>
+
         </div>
 
-        <!-- AD SPACE 3: BOTTOM -->
-        <div class="ad-container ad-banner">
-            <p>Ad Space (Bottom)</p>
+        <!-- AD SPACE: BOTTOM BANNER -->
+        <div class="ad-container">
+            <!-- PASTE ADSENSE DISPLAY AD CODE HERE -->
+            <p>Ad Space (Bottom Banner)</p>
         </div>
     </div>
 
-    <!-- 2. ABOUT US PAGE (Detailed for SEO) -->
+    <!-- ============================================
+         2. ABOUT US PAGE (High Quality Content)
+    ============================================= -->
     <div id="about-page" class="page-section">
         <div class="content-box">
             <h2>About PDF Master</h2>
-            <p>Welcome to <strong>PDF Master</strong>, your number one source for all things related to PDF management. We're dedicated to giving you the very best of online PDF tools, with a focus on dependability, security, and ease of use.</p>
+            <p>Welcome to <strong>PDF Master</strong>, your number one source for all things related to PDF management. We are dedicated to providing you the very best of online PDF tools, with a focus on speed, data security, and ease of access.</p>
             
             <h3>Our Mission</h3>
-            <p>Founded in 2023, PDF Master has come a long way from its beginnings. When we first started out, our passion for "making file management accessible to everyone" drove us to do tons of research so that PDF Master can offer you the world's most advanced PDF tools right in your browser. We now serve customers all over the world and are thrilled that we're able to turn our passion into our own website.</p>
+            <p>In a digital world, handling documents shouldn't be a hassle. Our mission is to simplify PDF operations for students, professionals, and businesses. We believe that basic file operations like merging, splitting, and converting should be free and accessible to everyone, everywhere.</p>
 
             <h3>Why Choose Us?</h3>
             <ul>
-                <li><strong>Privacy First:</strong> We process files locally or secure cloud servers. No file is stored permanently.</li>
-                <li><strong>100% Free:</strong> All our standard tools are free to use without hidden charges.</li>
-                <li><strong>Cross-Platform:</strong> Works on Windows, Mac, Linux, Android, and iOS.</li>
-                <li><strong>No Installation:</strong> Everything works in the browser. No software download required.</li>
+                <li><strong>Privacy First:</strong> We process files with advanced encryption. Files are deleted from our servers automatically after 2 hours.</li>
+                <li><strong>100% Free:</strong> No credit card required. No hidden fees.</li>
+                <li><strong>Cross-Platform:</strong> Works perfectly on Windows, Mac, Linux, iOS, and Android devices.</li>
             </ul>
-
-            <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.</p>
         </div>
     </div>
 
-    <!-- 3. PRIVACY POLICY PAGE (AdSense Compliant) -->
+    <!-- ============================================
+         3. PRIVACY POLICY (AdSense Required)
+    ============================================= -->
     <div id="privacy-page" class="page-section">
         <div class="content-box">
             <h2>Privacy Policy</h2>
-            <p>At PDF Master, accessible from our website, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by PDF Master and how we use it.</p>
+            <p>At PDF Master, accessible from this website, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by PDF Master and how we use it.</p>
 
             <h3>Log Files</h3>
-            <p>PDF Master follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks.</p>
+            <p>PDF Master follows a standard procedure of using log files. These files log visitors when they visit websites. The information collected includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, and referring/exit pages. These are not linked to any information that is personally identifiable.</p>
 
             <h3>Cookies and Web Beacons</h3>
-            <p>Like any other website, PDF Master uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</p>
+            <p>Like any other website, PDF Master uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content.</p>
 
             <h3>Google DoubleClick DART Cookie</h3>
-            <p>Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy.</p>
-
-            <h3>Data Security</h3>
-            <p>We do not store your files on our servers. All file processing is done either client-side or on temporary secure servers where files are deleted automatically after processing.</p>
+            <p>Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy.</p>
         </div>
     </div>
 
-    <!-- 4. TERMS PAGE (Legal Requirement) -->
+    <!-- ============================================
+         4. TERMS & CONDITIONS
+    ============================================= -->
     <div id="terms-page" class="page-section">
         <div class="content-box">
             <h2>Terms and Conditions</h2>
             <p>Welcome to PDF Master!</p>
-            <p>These terms and conditions outline the rules and regulations for the use of PDF Master's Website.</p>
+            <p>These terms and conditions outline the rules and regulations for the use of PDF Master's Website. By accessing this website we assume you accept these terms and conditions. Do not continue to use PDF Master if you do not agree to take all of the terms and conditions stated on this page.</p>
             
-            <h3>License</h3>
-            <p>Unless otherwise stated, PDF Master and/or its licensors own the intellectual property rights for all material on PDF Master. All intellectual property rights are reserved. You may access this from PDF Master for your own personal use subjected to restrictions set in these terms and conditions.</p>
-
             <h3>User Responsibility</h3>
-            <p>You are responsible for the content of the files you process using our tools. PDF Master is not liable for any data loss, corruption, or copyright infringement related to your files.</p>
+            <p>You agree that you are responsible for the content of the files you process using our tools. PDF Master is not liable for any data loss, corruption, or copyright infringement related to your uploaded files. We provide these tools "as is" without any warranties.</p>
         </div>
     </div>
 
-    <!-- 5. DISCLAIMER PAGE -->
-    <div id="disclaimer-page" class="page-section">
-        <div class="content-box">
-            <h2>Disclaimer</h2>
-            <p>The tools provided on PDF Master are provided "as is". PDF Master makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
-            <p>Further, PDF Master does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.</p>
-        </div>
-    </div>
-
-    <!-- 6. CONTACT US PAGE -->
+    <!-- ============================================
+         5. CONTACT PAGE
+    ============================================= -->
     <div id="contact-page" class="page-section">
-        <div class="content-box">
+        <div class="content-box contact-wrapper">
             <h2>Contact Us</h2>
-            <p>If you have any questions about our Privacy Policy, the practices of this site, or your dealings with this site, please contact us.</p>
+            <p style="text-align: center;">Have a question or a suggestion? We'd love to hear from you.</p>
             
-            <div style="margin-bottom: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px;">
-                <strong><i class="fa-solid fa-envelope"></i> Email:</strong> support@pdfmaster.com
-            </div>
-
-            <form onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent.');">
+            <form onsubmit="event.preventDefault(); alert('Message Sent! We will contact you soon.');">
                 <div class="form-group">
                     <label>Your Name</label>
                     <input type="text" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="email@example.com" required>
+                    <input type="email" placeholder="email@domain.com" required>
                 </div>
                 <div class="form-group">
                     <label>Message</label>
@@ -335,14 +348,18 @@
         </div>
     </div>
 
-    <!-- COOKIE CONSENT BANNER (Required for AdSense/GDPR) -->
+    <!-- COOKIE CONSENT BANNER (GDPR Compliant) -->
     <div id="cookieBanner" class="cookie-banner">
-        <p>We use cookies to enhance your experience and analyze our traffic. By clicking "Accept", you consent to our use of cookies.</p>
-        <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+        <p>🍪 We use cookies to improve your experience and show personalized ads. By using our site, you accept our <button onclick="showPage('privacy')" style="background:none; border:none; color:#4f46e5; text-decoration:underline; cursor:pointer;">Privacy Policy</button>.</p>
+        <button class="cookie-btn" onclick="acceptCookies()">Accept All</button>
     </div>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
-        <div class="footer-links">
+        <div class="footer-nav">
             <button onclick="showPage('home')">Home</button> |
-            <button onclic
+            <button onclick="showPage('about')">About Us</button> |
+            <button onclick="showPage('privacy')">Privacy Policy</button> |
+            <button onclick="showPage('terms')">Terms</button> |
+            <button onclick="showPage('contact')">Contact</button>
+        <
